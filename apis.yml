@@ -238,7 +238,7 @@ common:
       - name: TPC-H
       - name: Vertica
 created: '2025-06-05'
-modified: '2025-07-15'
+modified: '2026-03-16'
 position: Consuming
 description: >-
   Trino is an open-source, distributed SQL query engine built for lightning-fast
@@ -252,5 +252,5 @@ description: >-
   gigabytes to petabytes of data .
 maintainers:
   - FN: Kin Lane
-    email: info@apievangelist.com
+    email: kin@apievangelist.com
 specificationVersion: '0.19'
