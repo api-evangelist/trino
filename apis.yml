@@ -13,8 +13,8 @@ apis:
       - url: ' https://trino.io/'
         type: Documentation
     description: >-
-      Fast distributed SQL query engine for big data analytics that helps you
-      explore your data universe. 
+      Fast distributed SQL query engine for big data analytics that helps you explore
+      your data universe.
 name: Trino
 tags:
   - SQL
@@ -29,7 +29,7 @@ common:
     name: GitHub Organization
     type: GitHubOrganization
   - url: https://trino.io/
-    name: "Trino |\_Distributed SQL query engine for big data"
+    name: "Trino | Distributed SQL query engine for big data"
     type: Website
     description: 'null'
   - url: https://trino.io/docs/current/
@@ -53,11 +53,11 @@ common:
     type: ChangeLog
     description: 'null'
   - url: https://trino.io/download
-    name: "Trino |\_Get started with Trino"
+    name: "Trino | Get started with Trino"
     type: GettingStarted
     description: 'null'
   - url: https://trino.io/community#events
-    name: "Trino |\_Trino Community"
+    name: "Trino | Trino Community"
     type: Events
     description: 'null'
   - url: https://trino.io/blog/
@@ -65,7 +65,7 @@ common:
     type: Blog
     description: 'null'
   - url: https://trino.io/community
-    name: "Trino |\_Trino Community"
+    name: "Trino | Trino Community"
     type: Discussions
     description: 'null'
   - name: Features
@@ -241,15 +241,11 @@ created: '2025-06-05'
 modified: '2026-03-16'
 position: Consuming
 description: >-
-  Trino is an open-source, distributed SQL query engine built for lightning-fast
-  analytics over large, heterogeneous data sets. Originally forked from Presto
-  (which emerged at Facebook), it supports ANSI-compliant SQL across a wide
-  range of storage systemsfrom data lakes (S3, HDFS, Iceberg) to relational and
-  NoSQL databases (MySQL, PostgreSQL, Cassandra, MongoDB, Elasticsearch, Kafka,
-  and more) . Architecturally, Trino employs a massively parallel processing
-  (MPP) model with a dedicated coordinator that plans queries and multiple
-  worker nodes that execute them in parallel, allowing it to scale from
-  gigabytes to petabytes of data .
+  Trino is an open-source, distributed SQL query engine built for lightning-fast analytics
+  over large, heterogeneous data sets. Originally forked from Presto (which emerged
+  at Facebook), it supports ANSI-compliant SQL across a wide range of storage systemsfrom
+  data lakes (S3, HDFS, Iceberg) to relational and NoSQL databases (MySQL, PostgreSQL,
+  Cassandra, MongoDB, Elasticsearch, Kafka, and more) .
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
