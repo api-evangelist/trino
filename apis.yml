@@ -5,9 +5,9 @@ apis:
   - aid: trino:trino
     name: Trino
     tags:
-      - SQL
       - MySQL
       - NoSQL
+      - SQL
     humanURL: ' https://trino.io/'
     properties:
       - url: ' https://trino.io/'
@@ -17,10 +17,10 @@ apis:
       your data universe.
 name: Trino
 tags:
-  - SQL
   - MySQL
   - NoSQL
   - Queries
+  - SQL
 type: Contract
 image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
 access: 3rd-Party
