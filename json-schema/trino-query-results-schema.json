@@ -1,0 +1,175 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/api-evangelist/trino/blob/main/json-schema/trino-query-results-schema.json",
+  "title": "Trino Query Results",
+  "description": "Schema for the QueryResults response object returned by POST /v1/statement and GET nextUri in the Trino Client REST API",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique query identifier assigned by the Trino coordinator",
+      "examples": ["20240515_143022_00001_xyz12"]
+    },
+    "infoUri": {
+      "type": "string",
+      "format": "uri",
+      "description": "URI for human-readable query information in the Trino Web UI"
+    },
+    "nextUri": {
+      "type": "string",
+      "format": "uri",
+      "description": "URI to fetch the next batch of results. Absent when the query is complete."
+    },
+    "columns": {
+      "type": "array",
+      "description": "Column definitions for the result set",
+      "items": {
+        "type": "object",
+        "required": ["name", "type"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Column name"
+          },
+          "type": {
+            "type": "string",
+            "description": "Trino data type name",
+            "examples": ["varchar", "bigint", "double", "boolean", "timestamp", "array(varchar)"]
+          },
+          "typeSignature": {
+            "type": "object",
+            "description": "Structured type signature for complex Trino types",
+            "properties": {
+              "rawType": { "type": "string" },
+              "arguments": {
+                "type": "array",
+                "items": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "data": {
+      "type": "array",
+      "description": "Result rows as arrays of values in column order. Absent when no data is available yet.",
+      "items": {
+        "type": "array",
+        "items": {}
+      }
+    },
+    "updateType": {
+      "type": "string",
+      "description": "DDL/DML operation type for non-SELECT statements",
+      "examples": ["CREATE TABLE", "INSERT", "DROP TABLE", "ALTER TABLE"]
+    },
+    "updateCount": {
+      "type": "integer",
+      "format": "int64",
+      "description": "Number of rows affected by a DML statement"
+    },
+    "stats": {
+      "$ref": "#/$defs/QueryStats"
+    },
+    "error": {
+      "$ref": "#/$defs/QueryError"
+    },
+    "warnings": {
+      "type": "array",
+      "description": "Non-fatal warnings from query execution",
+      "items": {
+        "$ref": "#/$defs/Warning"
+      }
+    }
+  },
+  "$defs": {
+    "QueryStats": {
+      "title": "Query Stats",
+      "type": "object",
+      "description": "Runtime execution statistics for a Trino query",
+      "properties": {
+        "state": {
+          "type": "string",
+          "description": "Current query execution state",
+          "enum": ["QUEUED", "PLANNING", "STARTING", "RUNNING", "FINISHING", "FINISHED", "FAILED"]
+        },
+        "queued": { "type": "boolean" },
+        "scheduled": { "type": "boolean" },
+        "nodes": {
+          "type": "integer",
+          "description": "Number of cluster nodes participating in query execution"
+        },
+        "totalSplits": { "type": "integer", "format": "int64" },
+        "queuedSplits": { "type": "integer", "format": "int64" },
+        "runningSplits": { "type": "integer", "format": "int64" },
+        "completedSplits": { "type": "integer", "format": "int64" },
+        "cpuTimeMillis": { "type": "integer", "format": "int64" },
+        "wallTimeMillis": { "type": "integer", "format": "int64" },
+        "queuedTimeMillis": { "type": "integer", "format": "int64" },
+        "elapsedTimeMillis": { "type": "integer", "format": "int64" },
+        "processedRows": { "type": "integer", "format": "int64" },
+        "processedBytes": { "type": "integer", "format": "int64" },
+        "peakMemoryBytes": { "type": "integer", "format": "int64" },
+        "spilledBytes": { "type": "integer", "format": "int64" },
+        "progressPercentage": {
+          "type": "number",
+          "format": "double",
+          "minimum": 0,
+          "maximum": 100
+        }
+      }
+    },
+    "QueryError": {
+      "title": "Query Error",
+      "type": "object",
+      "description": "Error information when a Trino query fails",
+      "properties": {
+        "message": {
+          "type": "string",
+          "description": "Human-readable error message"
+        },
+        "sqlState": {
+          "type": "string",
+          "description": "ANSI SQL state code"
+        },
+        "errorCode": {
+          "type": "integer",
+          "description": "Trino numeric error code"
+        },
+        "errorName": {
+          "type": "string",
+          "description": "Symbolic error name",
+          "examples": ["SYNTAX_ERROR", "QUERY_EXCEEDED_MEMORY_LIMIT", "CATALOG_NOT_FOUND"]
+        },
+        "errorType": {
+          "type": "string",
+          "description": "Error classification",
+          "enum": ["USER_ERROR", "INTERNAL_ERROR", "INSUFFICIENT_RESOURCES", "EXTERNAL"]
+        },
+        "errorLocation": {
+          "type": "object",
+          "description": "Location in the SQL query where the error occurred",
+          "properties": {
+            "lineNumber": { "type": "integer" },
+            "columnNumber": { "type": "integer" }
+          }
+        }
+      }
+    },
+    "Warning": {
+      "title": "Warning",
+      "type": "object",
+      "description": "Non-fatal warning from Trino query execution",
+      "properties": {
+        "warningCode": {
+          "type": "object",
+          "properties": {
+            "code": { "type": "integer" },
+            "name": { "type": "string" }
+          }
+        },
+        "message": { "type": "string" }
+      }
+    }
+  }
+}

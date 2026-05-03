@@ -1,0 +1,53 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "http://localhost:8080/v1/statement",
+    "headers": {
+      "X-Trino-User": "alice",
+      "X-Trino-Catalog": "hive",
+      "X-Trino-Schema": "default",
+      "X-Trino-Source": "my-app",
+      "Content-Type": "text/plain"
+    },
+    "body": "SELECT node_id, http_uri, node_version, state FROM system.runtime.nodes"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "id": "20240515_143022_00001_xyz12",
+      "infoUri": "http://localhost:8080/ui/query.html?20240515_143022_00001_xyz12",
+      "nextUri": "http://localhost:8080/v1/statement/20240515_143022_00001_xyz12/1",
+      "columns": [
+        { "name": "node_id", "type": "varchar" },
+        { "name": "http_uri", "type": "varchar" },
+        { "name": "node_version", "type": "varchar" },
+        { "name": "state", "type": "varchar" }
+      ],
+      "data": [
+        ["trino-coordinator-0", "http://coordinator:8080", "480", "active"],
+        ["trino-worker-1", "http://worker-1:8080", "480", "active"],
+        ["trino-worker-2", "http://worker-2:8080", "480", "active"]
+      ],
+      "stats": {
+        "state": "FINISHED",
+        "queued": false,
+        "scheduled": true,
+        "nodes": 3,
+        "totalSplits": 1,
+        "queuedSplits": 0,
+        "runningSplits": 0,
+        "completedSplits": 1,
+        "cpuTimeMillis": 12,
+        "wallTimeMillis": 48,
+        "queuedTimeMillis": 3,
+        "elapsedTimeMillis": 51,
+        "processedRows": 3,
+        "processedBytes": 1024,
+        "progressPercentage": 100
+      }
+    }
+  }
+}

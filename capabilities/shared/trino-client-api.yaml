@@ -1,0 +1,311 @@
+naftiko: "1.0.0-alpha1"
+
+info:
+  label: "Trino Client REST API"
+  description: "HTTP REST API for submitting SQL queries to a Trino coordinator, polling for results, and managing running queries."
+  tags:
+    - Analytics
+    - Big Data
+    - Distributed SQL
+    - Queries
+    - SQL
+  created: "2026-05-03"
+  modified: "2026-05-03"
+
+binds:
+  - namespace: env
+    keys:
+      TRINO_HOST: TRINO_HOST
+      TRINO_USER: TRINO_USER
+
+capability:
+  consumes:
+    - type: http
+      namespace: trino-client
+      baseUri: "http://{{env.TRINO_HOST}}"
+      description: "Trino distributed SQL query engine REST API"
+      authentication:
+        type: apikey
+        key: X-Trino-User
+        value: "{{env.TRINO_USER}}"
+        placement: header
+      resources:
+        - name: statements
+          path: /v1/statement
+          description: "SQL query submission and result streaming"
+          operations:
+            - name: submit-statement
+              method: POST
+              description: "Submit an SQL query for execution and receive initial results"
+              inputParameters:
+                - name: X-Trino-Catalog
+                  in: header
+                  type: string
+                  required: false
+                  description: "Default catalog for the query session"
+                - name: X-Trino-Schema
+                  in: header
+                  type: string
+                  required: false
+                  description: "Default schema for the query session"
+                - name: X-Trino-Source
+                  in: header
+                  type: string
+                  required: false
+                  description: "Client application identifier"
+                - name: X-Trino-Session
+                  in: header
+                  type: string
+                  required: false
+                  description: "Comma-separated session property assignments"
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+              body:
+                type: text
+                data:
+                  query: "{{tools.sql_query}}"
+
+        - name: query-results
+          path: /v1/statement/{queryId}/{token}
+          description: "Poll for query result pages and cancel queries"
+          operations:
+            - name: get-query-results
+              method: GET
+              description: "Retrieve the next page of results for a running query"
+              inputParameters:
+                - name: queryId
+                  in: path
+                  type: string
+                  required: true
+                  description: "Unique query identifier from submit-statement response"
+                - name: token
+                  in: path
+                  type: integer
+                  required: true
+                  description: "Sequential token for result page"
+                - name: maxWait
+                  in: query
+                  type: string
+                  required: false
+                  description: "Maximum wait duration before returning empty batch"
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+            - name: cancel-query
+              method: DELETE
+              description: "Cancel a running query"
+              inputParameters:
+                - name: queryId
+                  in: path
+                  type: string
+                  required: true
+                  description: "Unique query identifier"
+                - name: token
+                  in: path
+                  type: integer
+                  required: true
+                  description: "Sequential token matching current position"
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+        - name: cluster-info
+          path: /v1/info
+          description: "Trino cluster health and version information"
+          operations:
+            - name: get-cluster-info
+              method: GET
+              description: "Retrieve cluster version, environment, and startup status"
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+        - name: nodes
+          path: /v1/node
+          description: "Trino cluster worker node listing"
+          operations:
+            - name: list-nodes
+              method: GET
+              description: "List all active worker nodes in the Trino cluster"
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+        - name: queries
+          path: /v1/query
+          description: "Active and historical query management"
+          operations:
+            - name: list-queries
+              method: GET
+              description: "List running and recently completed queries"
+              inputParameters:
+                - name: state
+                  in: query
+                  type: string
+                  required: false
+                  description: "Filter by query state (RUNNING, FINISHED, FAILED, etc.)"
+                - name: limit
+                  in: query
+                  type: integer
+                  required: false
+                  description: "Maximum number of queries to return"
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+  exposes:
+    - type: rest
+      port: 8100
+      namespace: trino-client-rest
+      resources:
+        - path: /v1/queries
+          name: queries
+          description: "Submit and list queries"
+          operations:
+            - method: POST
+              name: submit-query
+              description: "Submit an SQL query for execution"
+              call: "trino-client.submit-statement"
+              with:
+                sql_query: "rest.body.query"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+            - method: GET
+              name: list-queries
+              description: "List active and recent queries"
+              call: "trino-client.list-queries"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+        - path: /v1/queries/{queryId}/{token}
+          name: query-results
+          description: "Retrieve results or cancel a query"
+          operations:
+            - method: GET
+              name: get-query-results
+              description: "Get next page of query results"
+              call: "trino-client.get-query-results"
+              with:
+                queryId: "rest.queryId"
+                token: "rest.token"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+            - method: DELETE
+              name: cancel-query
+              description: "Cancel a running query"
+              call: "trino-client.cancel-query"
+              with:
+                queryId: "rest.queryId"
+                token: "rest.token"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+        - path: /v1/cluster/info
+          name: cluster-info
+          description: "Cluster health information"
+          operations:
+            - method: GET
+              name: get-cluster-info
+              description: "Get cluster version and health status"
+              call: "trino-client.get-cluster-info"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+        - path: /v1/cluster/nodes
+          name: nodes
+          description: "Cluster worker nodes"
+          operations:
+            - method: GET
+              name: list-nodes
+              description: "List all active worker nodes"
+              call: "trino-client.list-nodes"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+
+    - type: mcp
+      port: 9100
+      namespace: trino-client-mcp
+      transport: http
+      tools:
+        - name: submit-sql-query
+          description: "Submit an SQL query to Trino and receive results"
+          hints:
+            readOnly: true
+            openWorld: true
+          call: "trino-client.submit-statement"
+          with:
+            sql_query: "tools.sql_query"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: get-query-results
+          description: "Retrieve the next page of results for a running query"
+          hints:
+            readOnly: true
+            openWorld: false
+          call: "trino-client.get-query-results"
+          with:
+            queryId: "tools.queryId"
+            token: "tools.token"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: cancel-query
+          description: "Cancel a running Trino query"
+          hints:
+            readOnly: false
+            destructive: true
+            idempotent: true
+          call: "trino-client.cancel-query"
+          with:
+            queryId: "tools.queryId"
+            token: "tools.token"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: get-cluster-info
+          description: "Get Trino cluster version and health information"
+          hints:
+            readOnly: true
+            openWorld: false
+          call: "trino-client.get-cluster-info"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: list-cluster-nodes
+          description: "List all active worker nodes in the Trino cluster"
+          hints:
+            readOnly: true
+            openWorld: false
+          call: "trino-client.list-nodes"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: list-queries
+          description: "List running and recently completed queries on the cluster"
+          hints:
+            readOnly: true
+            openWorld: false
+          call: "trino-client.list-queries"
+          with:
+            state: "tools.state"
+            limit: "tools.limit"
+          outputParameters:
+            - type: object
+              mapping: "$."

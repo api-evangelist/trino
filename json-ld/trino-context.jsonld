@@ -1,0 +1,79 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "schema": "https://schema.org/",
+    "trino": "https://trino.io/vocab#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+
+    "QueryResults": "trino:QueryResults",
+    "QueryStats": "trino:QueryStats",
+    "QueryError": "trino:QueryError",
+    "Column": "trino:Column",
+    "ServerInfo": "trino:ServerInfo",
+    "NodeStatus": "trino:NodeStatus",
+
+    "id": "@id",
+    "infoUri": {
+      "@id": "trino:infoUri",
+      "@type": "@id"
+    },
+    "nextUri": {
+      "@id": "trino:nextUri",
+      "@type": "@id"
+    },
+    "columns": {
+      "@id": "trino:columns",
+      "@container": "@list"
+    },
+    "data": {
+      "@id": "trino:data",
+      "@container": "@list"
+    },
+    "updateType": "trino:updateType",
+    "updateCount": {
+      "@id": "trino:updateCount",
+      "@type": "xsd:integer"
+    },
+    "stats": "trino:stats",
+    "error": "trino:error",
+    "warnings": {
+      "@id": "trino:warnings",
+      "@container": "@list"
+    },
+
+    "name": "schema:name",
+    "type": "trino:columnType",
+    "typeSignature": "trino:typeSignature",
+
+    "state": "trino:queryState",
+    "queued": { "@id": "trino:queued", "@type": "xsd:boolean" },
+    "scheduled": { "@id": "trino:scheduled", "@type": "xsd:boolean" },
+    "nodes": { "@id": "trino:nodes", "@type": "xsd:integer" },
+    "totalSplits": { "@id": "trino:totalSplits", "@type": "xsd:long" },
+    "completedSplits": { "@id": "trino:completedSplits", "@type": "xsd:long" },
+    "cpuTimeMillis": { "@id": "trino:cpuTimeMillis", "@type": "xsd:long" },
+    "wallTimeMillis": { "@id": "trino:wallTimeMillis", "@type": "xsd:long" },
+    "processedRows": { "@id": "trino:processedRows", "@type": "xsd:long" },
+    "processedBytes": { "@id": "trino:processedBytes", "@type": "xsd:long" },
+    "progressPercentage": { "@id": "trino:progressPercentage", "@type": "xsd:double" },
+
+    "message": "schema:description",
+    "errorCode": "trino:errorCode",
+    "errorName": "trino:errorName",
+    "errorType": "trino:errorType",
+    "errorLocation": "trino:errorLocation",
+    "lineNumber": { "@id": "trino:lineNumber", "@type": "xsd:integer" },
+    "columnNumber": { "@id": "trino:columnNumber", "@type": "xsd:integer" },
+
+    "nodeVersion": "trino:nodeVersion",
+    "version": "schema:version",
+    "environment": "trino:environment",
+    "coordinator": { "@id": "trino:coordinator", "@type": "xsd:boolean" },
+    "starting": { "@id": "trino:starting", "@type": "xsd:boolean" },
+    "uptime": "trino:uptime",
+
+    "nodeId": "trino:nodeId",
+    "nodeIp": "trino:nodeIp",
+    "lastResponseTime": { "@id": "trino:lastResponseTime", "@type": "xsd:dateTime" }
+  }
+}

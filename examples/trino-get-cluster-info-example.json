@@ -1,0 +1,24 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "http://localhost:8080/v1/info",
+    "headers": {
+      "X-Trino-User": "admin"
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "nodeVersion": {
+        "version": "480"
+      },
+      "environment": "production",
+      "coordinator": true,
+      "starting": false,
+      "uptime": "3 days, 4 hours, 12 minutes"
+    }
+  }
+}

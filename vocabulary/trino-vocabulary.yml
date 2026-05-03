@@ -1,0 +1,182 @@
+vocabulary:
+  name: Trino Vocabulary
+  description: >-
+    Domain vocabulary for Trino, the open-source distributed SQL query engine.
+    Covers core concepts, data types, connectors, query execution, and cluster management.
+  version: "480"
+  created: "2026-05-03"
+  modified: "2026-05-03"
+
+terms:
+  - term: Catalog
+    definition: >-
+      A named data source registered in Trino's connector framework. Each catalog maps
+      to a single connector instance and provides access to schemas and tables within
+      that data source. Example: hive, iceberg, postgresql, mysql.
+    tags:
+      - Architecture
+      - Data Sources
+
+  - term: Connector
+    definition: >-
+      A Trino plugin that provides integration with a specific data storage or processing
+      system. Connectors implement the Trino SPI and expose tables, schemas, and SQL
+      operations over an underlying data source such as Hive, PostgreSQL, Kafka, or Iceberg.
+    tags:
+      - Architecture
+      - Integrations
+
+  - term: Coordinator
+    definition: >-
+      The single Trino node that accepts client SQL queries, parses and plans them, and
+      distributes execution stages to worker nodes. The coordinator hosts the /v1/statement
+      REST endpoint and the Trino Web UI.
+    tags:
+      - Architecture
+      - Cluster Management
+
+  - term: Worker
+    definition: >-
+      A Trino node that executes query fragments (splits) assigned by the coordinator.
+      Workers process data locally and exchange intermediate results with other workers
+      via the exchange protocol.
+    tags:
+      - Architecture
+      - Cluster Management
+
+  - term: Split
+    definition: >-
+      The unit of parallelism in Trino. Each split represents a subset of data to be
+      read from a connector (e.g., an HDFS file block, a Kafka partition segment).
+      Workers execute splits in parallel to produce query results.
+    tags:
+      - Execution
+      - Parallelism
+
+  - term: Stage
+    definition: >-
+      A sequential phase of query execution that can run in parallel across multiple
+      workers. The query plan is divided into stages separated by data exchange operations.
+    tags:
+      - Execution
+      - Query Plan
+
+  - term: Task
+    definition: >-
+      An instance of a stage running on a specific worker node. Tasks process splits
+      and produce operator results that are fed to the next stage.
+    tags:
+      - Execution
+
+  - term: Operator
+    definition: >-
+      A single logical operation within a task, such as table scan, filter, project,
+      aggregation, join, or exchange. Operators form a pipeline within a task.
+    tags:
+      - Execution
+      - Query Plan
+
+  - term: QueryResults
+    definition: >-
+      The JSON response object returned by POST /v1/statement and GET nextUri. Contains
+      the query ID, column metadata, data rows, execution statistics, and optionally
+      a nextUri for polling more results.
+    tags:
+      - API
+      - Data Model
+
+  - term: nextUri
+    definition: >-
+      A URL in the QueryResults response that clients must GET to retrieve the next
+      batch of results. Clients follow nextUri until it is absent, signaling query
+      completion. DELETE nextUri cancels the query.
+    tags:
+      - API
+      - Protocol
+
+  - term: Session
+    definition: >-
+      A logical client context for query execution. Sessions hold the current catalog,
+      schema, time zone, locale, resource group tags, and session properties set via
+      X-Trino-Session headers or USE statements.
+    tags:
+      - Authentication
+      - Configuration
+
+  - term: Session Property
+    definition: >-
+      A named configuration parameter that modifies query execution behavior within a
+      session. Set via X-Trino-Session header (key=value) or SET SESSION statement.
+      Examples: query_max_memory, optimize_hash_generation, join_distribution_type.
+    tags:
+      - Configuration
+
+  - term: Resource Group
+    definition: >-
+      A named administrative unit used to manage concurrency and memory limits for
+      groups of queries. Resource groups are matched using client tags (X-Trino-Client-Tags)
+      and enforce queue limits and priorities.
+    tags:
+      - Administration
+      - Resource Management
+
+  - term: Fault-Tolerant Execution
+    definition: >-
+      A Trino execution mode that checkpoints intermediate results to durable storage,
+      enabling query recovery from node failures without restarting from scratch.
+      Useful for very long-running analytics queries.
+    tags:
+      - Reliability
+      - Execution
+
+  - term: Pushdown
+    definition: >-
+      An optimization where Trino translates SQL operations (filters, projections,
+      aggregations, joins) into connector-specific operations executed in the data
+      source itself, reducing data transfer and improving performance.
+    tags:
+      - Optimization
+      - Performance
+
+  - term: Dynamic Filtering
+    definition: >-
+      A runtime optimization that uses join build-side data to prune splits and rows
+      on the probe side, dramatically reducing I/O for selective join queries.
+    tags:
+      - Optimization
+      - Performance
+
+  - term: Exchange
+    definition: >-
+      The mechanism by which intermediate query results are transferred between stages
+      and workers. Exchanges can be local (within a worker) or remote (across workers).
+    tags:
+      - Execution
+      - Architecture
+
+  - term: Type
+    definition: >-
+      Trino's data type system. Includes primitive types (BOOLEAN, TINYINT, SMALLINT,
+      INTEGER, BIGINT, REAL, DOUBLE, DECIMAL, VARCHAR, CHAR, VARBINARY, DATE, TIME,
+      TIMESTAMP, INTERVAL) and complex types (ARRAY, MAP, ROW, JSON, UUID, IPADDRESS).
+    tags:
+      - Data Types
+      - Schema
+
+  - term: Iceberg
+    definition: >-
+      An open table format for large analytic datasets. Trino's Iceberg connector
+      supports ACID transactions, schema evolution, partition evolution, and time
+      travel queries on data stored in object storage (S3, GCS, ADLS).
+    tags:
+      - Connectors
+      - Data Lakes
+
+  - term: Hive Connector
+    definition: >-
+      Trino's connector for data stored in Hive-compatible formats (ORC, Parquet,
+      Avro, RCFile, JSON) on HDFS, S3, or other storage. The most widely used
+      Trino connector for data lake workloads.
+    tags:
+      - Connectors
+      - Data Lakes

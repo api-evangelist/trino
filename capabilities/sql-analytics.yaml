@@ -1,0 +1,188 @@
+naftiko: "1.0.0-alpha1"
+
+info:
+  label: "Trino SQL Analytics"
+  description: >-
+    Workflow capability for submitting distributed SQL queries to Trino, monitoring
+    query execution, retrieving results, and managing the Trino cluster. Designed
+    for data engineers, analysts, and data platform operators who need programmatic
+    access to Trino's big data SQL engine across data lakes and databases.
+  tags:
+    - Analytics
+    - Big Data
+    - Data Engineering
+    - Distributed SQL
+    - Queries
+    - SQL
+  created: "2026-05-03"
+  modified: "2026-05-03"
+
+binds:
+  - namespace: env
+    keys:
+      TRINO_HOST: TRINO_HOST
+      TRINO_USER: TRINO_USER
+
+capability:
+  consumes:
+    - import: trino-client
+      location: ./shared/trino-client-api.yaml
+
+  exposes:
+    - type: rest
+      port: 8080
+      namespace: trino-analytics-api
+      description: "Unified REST API for submitting and managing Trino SQL queries."
+      resources:
+        - path: /v1/queries
+          name: queries
+          description: "Submit SQL queries and list query history"
+          operations:
+            - method: POST
+              name: submit-query
+              description: "Submit an SQL query to Trino for distributed execution"
+              call: "trino-client.submit-statement"
+              with:
+                sql_query: "rest.body.query"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+            - method: GET
+              name: list-queries
+              description: "List active and recently completed queries"
+              call: "trino-client.list-queries"
+              with:
+                state: "rest.state"
+                limit: "rest.limit"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+        - path: /v1/queries/{queryId}/{token}
+          name: query-results
+          description: "Retrieve paginated results or cancel a query"
+          operations:
+            - method: GET
+              name: get-query-results
+              description: "Get the next page of results for a running query"
+              call: "trino-client.get-query-results"
+              with:
+                queryId: "rest.queryId"
+                token: "rest.token"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+            - method: DELETE
+              name: cancel-query
+              description: "Cancel a running query"
+              call: "trino-client.cancel-query"
+              with:
+                queryId: "rest.queryId"
+                token: "rest.token"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+        - path: /v1/cluster/info
+          name: cluster-info
+          description: "Trino cluster health and version information"
+          operations:
+            - method: GET
+              name: get-cluster-info
+              description: "Get Trino cluster version, environment, and startup state"
+              call: "trino-client.get-cluster-info"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+        - path: /v1/cluster/nodes
+          name: nodes
+          description: "Worker node listing and status"
+          operations:
+            - method: GET
+              name: list-nodes
+              description: "List all active worker nodes in the cluster"
+              call: "trino-client.list-nodes"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+
+    - type: mcp
+      port: 9090
+      namespace: trino-analytics-mcp
+      transport: http
+      description: "MCP server for AI-assisted SQL analytics with Trino distributed query engine."
+      tools:
+        - name: submit-sql-query
+          description: >-
+            Submit an SQL query to Trino for distributed execution across data lakes
+            and databases. Returns initial results and a nextUri for polling more data.
+          hints:
+            readOnly: true
+            openWorld: true
+          call: "trino-client.submit-statement"
+          with:
+            sql_query: "tools.sql_query"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: get-query-results
+          description: >-
+            Retrieve the next page of results for a running or recently completed query.
+            Follow the nextUri from a previous query response.
+          hints:
+            readOnly: true
+            openWorld: false
+          call: "trino-client.get-query-results"
+          with:
+            queryId: "tools.queryId"
+            token: "tools.token"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: cancel-query
+          description: "Cancel a running Trino query by its queryId and current token."
+          hints:
+            readOnly: false
+            destructive: true
+            idempotent: true
+          call: "trino-client.cancel-query"
+          with:
+            queryId: "tools.queryId"
+            token: "tools.token"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: list-active-queries
+          description: >-
+            List currently running and recently completed queries on the Trino cluster.
+            Filter by state (RUNNING, FINISHED, FAILED) or limit the result count.
+          hints:
+            readOnly: true
+            openWorld: false
+          call: "trino-client.list-queries"
+          with:
+            state: "tools.state"
+            limit: "tools.limit"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: get-cluster-info
+          description: >-
+            Retrieve Trino cluster metadata including version, environment name,
+            and whether the coordinator is still starting. Use for health checks.
+          hints:
+            readOnly: true
+            openWorld: false
+          call: "trino-client.get-cluster-info"
+          outputParameters:
+            - type: object
+              mapping: "$."
+        - name: list-cluster-nodes
+          description: >-
+            List all active worker nodes in the Trino cluster with their node IDs,
+            URIs, heartbeat times, and resource utilization.
+          hints:
+            readOnly: true
+            openWorld: false
+          call: "trino-client.list-nodes"
+          outputParameters:
+            - type: object
+              mapping: "$."

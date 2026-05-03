@@ -1,0 +1,90 @@
+{
+  "title": "Trino Query Results Structure",
+  "description": "Structural documentation for the QueryResults object returned by the Trino Client REST API",
+  "type": "object",
+  "fields": [
+    {
+      "name": "id",
+      "type": "string",
+      "required": false,
+      "description": "Unique query identifier (e.g., 20240515_143022_00001_xyz12)"
+    },
+    {
+      "name": "infoUri",
+      "type": "string (uri)",
+      "required": false,
+      "description": "Web UI URL for human-readable query information and plan"
+    },
+    {
+      "name": "nextUri",
+      "type": "string (uri)",
+      "required": false,
+      "description": "URL to GET for next batch of results. Absent when query is complete."
+    },
+    {
+      "name": "columns",
+      "type": "array<Column>",
+      "required": false,
+      "description": "Column metadata for the result set",
+      "children": [
+        { "name": "name", "type": "string", "required": true, "description": "Column name" },
+        { "name": "type", "type": "string", "required": true, "description": "Trino type (varchar, bigint, double, etc.)" },
+        { "name": "typeSignature", "type": "object", "required": false, "description": "Structured type signature for complex types" }
+      ]
+    },
+    {
+      "name": "data",
+      "type": "array<array>",
+      "required": false,
+      "description": "Result rows as arrays of values in column definition order. Absent when no data yet."
+    },
+    {
+      "name": "updateType",
+      "type": "string",
+      "required": false,
+      "description": "Operation type for DDL/DML statements (CREATE TABLE, INSERT, etc.)"
+    },
+    {
+      "name": "updateCount",
+      "type": "integer",
+      "required": false,
+      "description": "Number of rows affected by a DML statement"
+    },
+    {
+      "name": "stats",
+      "type": "QueryStats",
+      "required": false,
+      "description": "Runtime execution statistics",
+      "children": [
+        { "name": "state", "type": "string (enum)", "required": false, "description": "QUEUED|PLANNING|STARTING|RUNNING|FINISHING|FINISHED|FAILED" },
+        { "name": "nodes", "type": "integer", "required": false, "description": "Worker nodes used" },
+        { "name": "totalSplits", "type": "integer", "required": false, "description": "Total execution splits" },
+        { "name": "completedSplits", "type": "integer", "required": false, "description": "Completed execution splits" },
+        { "name": "cpuTimeMillis", "type": "integer", "required": false, "description": "Aggregate CPU time in milliseconds" },
+        { "name": "wallTimeMillis", "type": "integer", "required": false, "description": "Wall clock execution time in milliseconds" },
+        { "name": "processedRows", "type": "integer", "required": false, "description": "Total rows processed" },
+        { "name": "processedBytes", "type": "integer", "required": false, "description": "Total bytes processed" },
+        { "name": "progressPercentage", "type": "number", "required": false, "description": "Query completion percentage (0-100)" }
+      ]
+    },
+    {
+      "name": "error",
+      "type": "QueryError",
+      "required": false,
+      "description": "Error details when query fails",
+      "children": [
+        { "name": "message", "type": "string", "required": false, "description": "Human-readable error message" },
+        { "name": "errorCode", "type": "integer", "required": false, "description": "Trino numeric error code" },
+        { "name": "errorName", "type": "string", "required": false, "description": "Symbolic error name (SYNTAX_ERROR, etc.)" },
+        { "name": "errorType", "type": "string (enum)", "required": false, "description": "USER_ERROR|INTERNAL_ERROR|INSUFFICIENT_RESOURCES|EXTERNAL" },
+        { "name": "errorLocation", "type": "object", "required": false, "description": "Line and column in SQL query where error occurred" }
+      ]
+    },
+    {
+      "name": "warnings",
+      "type": "array<Warning>",
+      "required": false,
+      "description": "Non-fatal execution warnings"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "request": {
+    "method": "DELETE",
+    "url": "http://localhost:8080/v1/statement/20240515_143022_00001_xyz12/3",
+    "headers": {
+      "X-Trino-User": "alice"
+    }
+  },
+  "response": {
+    "status": 204,
+    "headers": {},
+    "body": null
+  }
+}
