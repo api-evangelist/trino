@@ -1,0 +1,99 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: Trino Client REST API — Cluster
+  description: 'Trino Client REST API — Cluster. 2 operations. Lead operation: Get Cluster Info. Self-contained Naftiko capability
+    covering one Trino business surface.'
+  tags:
+  - Trino
+  - Cluster
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    TRINO_API_KEY: TRINO_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: client-cluster
+    baseUri: http://{host}:{port}
+    description: Trino Client REST API — Cluster business capability. Self-contained, no shared references.
+    resources:
+    - name: v1-info
+      path: /v1/info
+      operations:
+      - name: getclusterinfo
+        method: GET
+        description: Get Cluster Info
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+    - name: v1-node
+      path: /v1/node
+      operations:
+      - name: listnodes
+        method: GET
+        description: List Cluster Nodes
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+  exposes:
+  - type: rest
+    namespace: client-cluster-rest
+    port: 8080
+    description: REST adapter for Trino Client REST API — Cluster. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/v1/info
+      name: v1-info
+      description: REST surface for v1-info.
+      operations:
+      - method: GET
+        name: getclusterinfo
+        description: Get Cluster Info
+        call: client-cluster.getclusterinfo
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/v1/node
+      name: v1-node
+      description: REST surface for v1-node.
+      operations:
+      - method: GET
+        name: listnodes
+        description: List Cluster Nodes
+        call: client-cluster.listnodes
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: client-cluster-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for Trino Client REST API — Cluster. One tool per consumed operation, routed inline through this
+      capability's consumes block.
+    tools:
+    - name: get-cluster-info
+      description: Get Cluster Info
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: client-cluster.getclusterinfo
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: list-cluster-nodes
+      description: List Cluster Nodes
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: client-cluster.listnodes
+      outputParameters:
+      - type: object
+        mapping: $.
