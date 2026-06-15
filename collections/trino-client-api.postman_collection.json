@@ -1,0 +1,1559 @@
+{
+  "item": [
+    {
+      "id": "bca415ab-c0c7-4250-8e27-a7f1340412fc",
+      "name": "Queries",
+      "description": {
+        "content": "Submit and manage SQL queries",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "9b6fb441-ef9f-47c3-84f0-8a86519c1fd6",
+          "name": "Submit SQL Statement",
+          "request": {
+            "name": "Submit SQL Statement",
+            "description": {
+              "content": "Submits an SQL query string for execution. Returns an initial QueryResults response which may contain the first batch of results and/or a nextUri for polling subsequent results. Clients must include the X-Trino-User header at minimum. Additional context headers (catalog, schema, session properties) may be provided to configure the query environment.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "statement"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "Trino coordinator hostname or IP",
+                  "type": "any",
+                  "value": "{{host}}",
+                  "key": "host"
+                },
+                {
+                  "description": "Trino coordinator HTTP port",
+                  "type": "any",
+                  "value": "{{port}}",
+                  "key": "port"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "(Required) The user identity submitting the query",
+                "key": "X-Trino-User",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "Default catalog for the query session",
+                "key": "X-Trino-Catalog",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "Default schema for the query session",
+                "key": "X-Trino-Schema",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "Identifies the client application submitting the query",
+                "key": "X-Trino-Source",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "Comma-separated list of session property assignments in key=value format",
+                "key": "X-Trino-Session",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "Transaction identifier for query grouping. Use NONE for auto-commit.",
+                "key": "X-Trino-Transaction-Id",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "Comma-separated client tags for resource group matching",
+                "key": "X-Trino-Client-Tags",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "Arbitrary client-supplied metadata about the client",
+                "key": "X-Trino-Client-Info",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "Time zone for the query session (IANA tz database format)",
+                "key": "X-Trino-Time-Zone",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "BCP 47 language tag for locale-sensitive operations",
+                "key": "X-Trino-Language",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "External trace token for distributed tracing correlation",
+                "key": "X-Trino-Trace-Token",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "Connector-specific extra credentials in name=value format. May appear multiple times.",
+                "key": "X-Trino-Extra-Credential",
+                "value": "<string>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "<string>"
+            }
+          },
+          "response": [
+            {
+              "id": "522024ad-f4d0-4c77-8dc1-ebd36cf94dc0",
+              "name": "Query accepted and initial results returned",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "statement"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "Trino coordinator hostname or IP",
+                      "type": "any",
+                      "value": "{{host}}",
+                      "key": "host"
+                    },
+                    {
+                      "description": "Trino coordinator HTTP port",
+                      "type": "any",
+                      "value": "{{port}}",
+                      "key": "port"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) The user identity submitting the query",
+                    "key": "X-Trino-User",
+                    "value": "alice"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Default catalog for the query session",
+                    "key": "X-Trino-Catalog",
+                    "value": "hive"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Default schema for the query session",
+                    "key": "X-Trino-Schema",
+                    "value": "default"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Identifies the client application submitting the query",
+                    "key": "X-Trino-Source",
+                    "value": "my-app"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Comma-separated list of session property assignments in key=value format",
+                    "key": "X-Trino-Session",
+                    "value": "query_max_memory=10GB,query_max_run_time=5m"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Transaction identifier for query grouping. Use NONE for auto-commit.",
+                    "key": "X-Trino-Transaction-Id",
+                    "value": "NONE"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Comma-separated client tags for resource group matching",
+                    "key": "X-Trino-Client-Tags",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Arbitrary client-supplied metadata about the client",
+                    "key": "X-Trino-Client-Info",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Time zone for the query session (IANA tz database format)",
+                    "key": "X-Trino-Time-Zone",
+                    "value": "America/New_York"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "BCP 47 language tag for locale-sensitive operations",
+                    "key": "X-Trino-Language",
+                    "value": "en-US"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "External trace token for distributed tracing correlation",
+                    "key": "X-Trino-Trace-Token",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Connector-specific extra credentials in name=value format. May appear multiple times.",
+                    "key": "X-Trino-Extra-Credential",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "SELECT * FROM system.runtime.nodes"
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "New default catalog set by the query (USE CATALOG statement)",
+                  "key": "X-Trino-Set-Catalog",
+                  "value": "string"
+                },
+                {
+                  "disabled": false,
+                  "description": "New default schema set by the query (USE SCHEMA statement)",
+                  "key": "X-Trino-Set-Schema",
+                  "value": "string"
+                },
+                {
+                  "disabled": false,
+                  "description": "Session property set by the query",
+                  "key": "X-Trino-Set-Session",
+                  "value": "string"
+                },
+                {
+                  "disabled": false,
+                  "description": "Session property cleared by the query",
+                  "key": "X-Trino-Clear-Session",
+                  "value": "string"
+                },
+                {
+                  "disabled": false,
+                  "description": "Transaction ID started by a START TRANSACTION statement",
+                  "key": "X-Trino-Started-Transaction-Id",
+                  "value": "string"
+                },
+                {
+                  "disabled": false,
+                  "description": "Indicates the transaction was committed or rolled back",
+                  "key": "X-Trino-Clear-Transaction-Id",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"20240101_120000_00001_abcde\",\n  \"infoUri\": \"http://PvJUeEXuTdaKnYkxoxu.zxpazR3ja,BUdJhDlbs5ktZ8Pf+VQRUXOtl6bKBO-+phOu05cvlOlduyQ\",\n  \"nextUri\": \"http://qWfDwFjwvfQUYcvyPkueysGJsoLgcK.ptfMFuwxCWJEft5K8qpj.lYUUn8mf3wHli0gBoEokV,T0C6\",\n  \"columns\": [\n    {\n      \"name\": \"node_id\",\n      \"type\": \"varchar\",\n      \"typeSignature\": {\n        \"rawType\": \"string\"\n      }\n    },\n    {\n      \"name\": \"node_id\",\n      \"type\": \"varchar\",\n      \"typeSignature\": {\n        \"rawType\": \"string\"\n      }\n    }\n  ],\n  \"data\": [\n    [],\n    []\n  ],\n  \"updateType\": \"CREATE TABLE\",\n  \"updateCount\": 6329,\n  \"stats\": {\n    \"state\": \"PLANNING\",\n    \"queued\": false,\n    \"scheduled\": true,\n    \"nodes\": 2090,\n    \"totalSplits\": 8556,\n    \"queuedSplits\": 9998,\n    \"runningSplits\": 9679,\n    \"completedSplits\": 9818,\n    \"cpuTimeMillis\": 8862,\n    \"wallTimeMillis\": 5051,\n    \"queuedTimeMillis\": 3874,\n    \"elapsedTimeMillis\": 8519,\n    \"processedRows\": 7776,\n    \"processedBytes\": 3189,\n    \"peakMemoryBytes\": 9122,\n    \"spilledBytes\": 154,\n    \"rootStage\": {\n      \"stageId\": \"string\",\n      \"state\": \"string\",\n      \"done\": true,\n      \"nodes\": 4514,\n      \"totalSplits\": 9550,\n      \"queuedSplits\": 7187,\n      \"runningSplits\": 4936,\n      \"completedSplits\": 892,\n      \"cpuTimeMillis\": 2620,\n      \"wallTimeMillis\": 3675,\n      \"processedRows\": 4591,\n      \"processedBytes\": 335,\n      \"subStages\": [\n        {\n          \"value\": \"<Circular reference to #/components/schemas/StageStats detected>\"\n        },\n        {\n          \"value\": \"<Circular reference to #/components/schemas/StageStats detected>\"\n        }\n      ]\n    },\n    \"progressPercentage\": 11.517550806620969\n  },\n  \"error\": {\n    \"message\": \"Query exceeded maximum memory limit of 10GB\",\n    \"sqlState\": \"42000\",\n    \"errorCode\": 8267,\n    \"errorName\": \"QUERY_EXCEEDED_MEMORY_LIMIT\",\n    \"errorType\": \"EXTERNAL\",\n    \"errorLocation\": {\n      \"lineNumber\": 3810,\n      \"columnNumber\": 3669\n    },\n    \"failureInfo\": {}\n  },\n  \"warnings\": [\n    {\n      \"warningCode\": {\n        \"code\": 2456,\n        \"name\": \"string\"\n      },\n      \"message\": \"string\"\n    },\n    {\n      \"warningCode\": {\n        \"code\": 3,\n        \"name\": \"string\"\n      },\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3fa86076-ba11-40d9-9459-73b8995e8d70",
+              "name": "Bad request — malformed SQL or invalid session parameters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "statement"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "Trino coordinator hostname or IP",
+                      "type": "any",
+                      "value": "{{host}}",
+                      "key": "host"
+                    },
+                    {
+                      "description": "Trino coordinator HTTP port",
+                      "type": "any",
+                      "value": "{{port}}",
+                      "key": "port"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) The user identity submitting the query",
+                    "key": "X-Trino-User",
+                    "value": "alice"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Default catalog for the query session",
+                    "key": "X-Trino-Catalog",
+                    "value": "hive"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Default schema for the query session",
+                    "key": "X-Trino-Schema",
+                    "value": "default"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Identifies the client application submitting the query",
+                    "key": "X-Trino-Source",
+                    "value": "my-app"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Comma-separated list of session property assignments in key=value format",
+                    "key": "X-Trino-Session",
+                    "value": "query_max_memory=10GB,query_max_run_time=5m"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Transaction identifier for query grouping. Use NONE for auto-commit.",
+                    "key": "X-Trino-Transaction-Id",
+                    "value": "NONE"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Comma-separated client tags for resource group matching",
+                    "key": "X-Trino-Client-Tags",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Arbitrary client-supplied metadata about the client",
+                    "key": "X-Trino-Client-Info",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Time zone for the query session (IANA tz database format)",
+                    "key": "X-Trino-Time-Zone",
+                    "value": "America/New_York"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "BCP 47 language tag for locale-sensitive operations",
+                    "key": "X-Trino-Language",
+                    "value": "en-US"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "External trace token for distributed tracing correlation",
+                    "key": "X-Trino-Trace-Token",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Connector-specific extra credentials in name=value format. May appear multiple times.",
+                    "key": "X-Trino-Extra-Credential",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "SELECT * FROM system.runtime.nodes"
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Query exceeded maximum memory limit of 10GB\",\n  \"sqlState\": \"42000\",\n  \"errorCode\": 2096,\n  \"errorName\": \"QUERY_EXCEEDED_MEMORY_LIMIT\",\n  \"errorType\": \"INSUFFICIENT_RESOURCES\",\n  \"errorLocation\": {\n    \"lineNumber\": 9998,\n    \"columnNumber\": 5570\n  },\n  \"failureInfo\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "094b2e57-70e3-4437-9ce7-3042f4ab5648",
+              "name": "Too many requests. Client must wait the duration specified in Retry-After header before retrying.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "statement"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "Trino coordinator hostname or IP",
+                      "type": "any",
+                      "value": "{{host}}",
+                      "key": "host"
+                    },
+                    {
+                      "description": "Trino coordinator HTTP port",
+                      "type": "any",
+                      "value": "{{port}}",
+                      "key": "port"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) The user identity submitting the query",
+                    "key": "X-Trino-User",
+                    "value": "alice"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Default catalog for the query session",
+                    "key": "X-Trino-Catalog",
+                    "value": "hive"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Default schema for the query session",
+                    "key": "X-Trino-Schema",
+                    "value": "default"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Identifies the client application submitting the query",
+                    "key": "X-Trino-Source",
+                    "value": "my-app"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Comma-separated list of session property assignments in key=value format",
+                    "key": "X-Trino-Session",
+                    "value": "query_max_memory=10GB,query_max_run_time=5m"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Transaction identifier for query grouping. Use NONE for auto-commit.",
+                    "key": "X-Trino-Transaction-Id",
+                    "value": "NONE"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Comma-separated client tags for resource group matching",
+                    "key": "X-Trino-Client-Tags",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Arbitrary client-supplied metadata about the client",
+                    "key": "X-Trino-Client-Info",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Time zone for the query session (IANA tz database format)",
+                    "key": "X-Trino-Time-Zone",
+                    "value": "America/New_York"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "BCP 47 language tag for locale-sensitive operations",
+                    "key": "X-Trino-Language",
+                    "value": "en-US"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "External trace token for distributed tracing correlation",
+                    "key": "X-Trino-Trace-Token",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Connector-specific extra credentials in name=value format. May appear multiple times.",
+                    "key": "X-Trino-Extra-Credential",
+                    "value": "<string>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "SELECT * FROM system.runtime.nodes"
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait before retrying",
+                  "key": "Retry-After",
+                  "value": "6115"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "7517f3cb-fe7e-4fa6-94c5-a2444323be75",
+              "name": "Service unavailable — transient cluster error; retry after 50-100ms",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "statement"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "Trino coordinator hostname or IP",
+                      "type": "any",
+                      "value": "{{host}}",
+                      "key": "host"
+                    },
+                    {
+                      "description": "Trino coordinator HTTP port",
+                      "type": "any",
+                      "value": "{{port}}",
+                      "key": "port"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) The user identity submitting the query",
+                    "key": "X-Trino-User",
+                    "value": "alice"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Default catalog for the query session",
+                    "key": "X-Trino-Catalog",
+                    "value": "hive"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Default schema for the query session",
+                    "key": "X-Trino-Schema",
+                    "value": "default"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Identifies the client application submitting the query",
+                    "key": "X-Trino-Source",
+                    "value": "my-app"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Comma-separated list of session property assignments in key=value format",
+                    "key": "X-Trino-Session",
+                    "value": "query_max_memory=10GB,query_max_run_time=5m"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Transaction identifier for query grouping. Use NONE for auto-commit.",
+                    "key": "X-Trino-Transaction-Id",
+                    "value": "NONE"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Comma-separated client tags for resource group matching",
+                    "key": "X-Trino-Client-Tags",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Arbitrary client-supplied metadata about the client",
+                    "key": "X-Trino-Client-Info",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Time zone for the query session (IANA tz database format)",
+                    "key": "X-Trino-Time-Zone",
+                    "value": "America/New_York"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "BCP 47 language tag for locale-sensitive operations",
+                    "key": "X-Trino-Language",
+                    "value": "en-US"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "External trace token for distributed tracing correlation",
+                    "key": "X-Trino-Trace-Token",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Connector-specific extra credentials in name=value format. May appear multiple times.",
+                    "key": "X-Trino-Extra-Credential",
+                    "value": "<string>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "SELECT * FROM system.runtime.nodes"
+                }
+              },
+              "status": "Service Unavailable",
+              "code": 503,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "37854d37-089f-4971-a35e-0e28ab3a7afe",
+          "name": "Get Query Results",
+          "request": {
+            "name": "Get Query Results",
+            "description": {
+              "content": "Retrieves the next batch of results for a running query. Clients should follow the nextUri from a previous QueryResults response. When no nextUri is present in the response, the query is complete.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "statement",
+                ":queryId",
+                ":token"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "maxWait",
+                  "value": "<string>",
+                  "description": "Maximum duration to wait for results before returning empty batch"
+                },
+                {
+                  "disabled": false,
+                  "key": "targetResultSize",
+                  "value": "<string>",
+                  "description": "Desired result batch size hint"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "queryId",
+                  "description": "(Required) The unique query identifier returned by POST /v1/statement"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<long>",
+                  "key": "token",
+                  "description": "(Required) Sequential token for paging through results"
+                },
+                {
+                  "description": "Trino coordinator hostname or IP",
+                  "type": "any",
+                  "value": "{{host}}",
+                  "key": "host"
+                },
+                {
+                  "description": "Trino coordinator HTTP port",
+                  "type": "any",
+                  "value": "{{port}}",
+                  "key": "port"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "(Required) The user identity (must match original query submission)",
+                "key": "X-Trino-User",
+                "value": "<string>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "b8d1edb3-d6f1-445d-a144-8fea6edb7bdb",
+              "name": "Next batch of results (may be empty if still processing)",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "statement",
+                    ":queryId",
+                    ":token"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "maxWait",
+                      "value": "2s"
+                    },
+                    {
+                      "key": "targetResultSize",
+                      "value": "1MB"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "queryId",
+                      "description": "(Required) The unique query identifier returned by POST /v1/statement"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<long>",
+                      "key": "token",
+                      "description": "(Required) Sequential token for paging through results"
+                    },
+                    {
+                      "description": "Trino coordinator hostname or IP",
+                      "type": "any",
+                      "value": "{{host}}",
+                      "key": "host"
+                    },
+                    {
+                      "description": "Trino coordinator HTTP port",
+                      "type": "any",
+                      "value": "{{port}}",
+                      "key": "port"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) The user identity (must match original query submission)",
+                    "key": "X-Trino-User",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"20240101_120000_00001_abcde\",\n  \"infoUri\": \"https://QBsmrKQlpNOZrt.dqr+\",\n  \"nextUri\": \"https://AUnAoWRVVcZswKhpY.qdytHfEu2u2BSTdpOiexSsnycSanTUnaAovTJcrfcZycZhhxwLkGCmkIzqL-\",\n  \"columns\": [\n    {\n      \"name\": \"node_id\",\n      \"type\": \"varchar\",\n      \"typeSignature\": {\n        \"rawType\": \"string\"\n      }\n    },\n    {\n      \"name\": \"node_id\",\n      \"type\": \"varchar\",\n      \"typeSignature\": {\n        \"rawType\": \"string\"\n      }\n    }\n  ],\n  \"data\": [\n    [],\n    []\n  ],\n  \"updateType\": \"CREATE TABLE\",\n  \"updateCount\": 4906,\n  \"stats\": {\n    \"state\": \"PLANNING\",\n    \"queued\": false,\n    \"scheduled\": true,\n    \"nodes\": 5916,\n    \"totalSplits\": 7854,\n    \"queuedSplits\": 1829,\n    \"runningSplits\": 2462,\n    \"completedSplits\": 1629,\n    \"cpuTimeMillis\": 5299,\n    \"wallTimeMillis\": 4073,\n    \"queuedTimeMillis\": 2178,\n    \"elapsedTimeMillis\": 1304,\n    \"processedRows\": 9878,\n    \"processedBytes\": 2660,\n    \"peakMemoryBytes\": 6410,\n    \"spilledBytes\": 4651,\n    \"rootStage\": {\n      \"stageId\": \"string\",\n      \"state\": \"string\",\n      \"done\": false,\n      \"nodes\": 5414,\n      \"totalSplits\": 4598,\n      \"queuedSplits\": 8778,\n      \"runningSplits\": 6624,\n      \"completedSplits\": 4005,\n      \"cpuTimeMillis\": 6018,\n      \"wallTimeMillis\": 2560,\n      \"processedRows\": 224,\n      \"processedBytes\": 8050,\n      \"subStages\": [\n        {\n          \"value\": \"<Circular reference to #/components/schemas/StageStats detected>\"\n        },\n        {\n          \"value\": \"<Circular reference to #/components/schemas/StageStats detected>\"\n        }\n      ]\n    },\n    \"progressPercentage\": 98.81145767976022\n  },\n  \"error\": {\n    \"message\": \"Query exceeded maximum memory limit of 10GB\",\n    \"sqlState\": \"42000\",\n    \"errorCode\": 1980,\n    \"errorName\": \"QUERY_EXCEEDED_MEMORY_LIMIT\",\n    \"errorType\": \"INSUFFICIENT_RESOURCES\",\n    \"errorLocation\": {\n      \"lineNumber\": 2457,\n      \"columnNumber\": 9018\n    },\n    \"failureInfo\": {}\n  },\n  \"warnings\": [\n    {\n      \"warningCode\": {\n        \"code\": 368,\n        \"name\": \"string\"\n      },\n      \"message\": \"string\"\n    },\n    {\n      \"warningCode\": {\n        \"code\": 792,\n        \"name\": \"string\"\n      },\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "23d455cc-852a-45bf-85a8-683e8f9c50ab",
+              "name": "Query not found — expired or already cancelled",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "statement",
+                    ":queryId",
+                    ":token"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "maxWait",
+                      "value": "2s"
+                    },
+                    {
+                      "key": "targetResultSize",
+                      "value": "1MB"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "queryId",
+                      "description": "(Required) The unique query identifier returned by POST /v1/statement"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<long>",
+                      "key": "token",
+                      "description": "(Required) Sequential token for paging through results"
+                    },
+                    {
+                      "description": "Trino coordinator hostname or IP",
+                      "type": "any",
+                      "value": "{{host}}",
+                      "key": "host"
+                    },
+                    {
+                      "description": "Trino coordinator HTTP port",
+                      "type": "any",
+                      "value": "{{port}}",
+                      "key": "port"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) The user identity (must match original query submission)",
+                    "key": "X-Trino-User",
+                    "value": "<string>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "33bdd004-da96-4b0f-9029-281f4e3a2210",
+              "name": "Too many concurrent polls; wait and retry",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "statement",
+                    ":queryId",
+                    ":token"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "maxWait",
+                      "value": "2s"
+                    },
+                    {
+                      "key": "targetResultSize",
+                      "value": "1MB"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "queryId",
+                      "description": "(Required) The unique query identifier returned by POST /v1/statement"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<long>",
+                      "key": "token",
+                      "description": "(Required) Sequential token for paging through results"
+                    },
+                    {
+                      "description": "Trino coordinator hostname or IP",
+                      "type": "any",
+                      "value": "{{host}}",
+                      "key": "host"
+                    },
+                    {
+                      "description": "Trino coordinator HTTP port",
+                      "type": "any",
+                      "value": "{{port}}",
+                      "key": "port"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) The user identity (must match original query submission)",
+                    "key": "X-Trino-User",
+                    "value": "<string>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "key": "Retry-After",
+                  "value": "6115",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "321b77e3-25a0-4390-84c5-a2b61f23da85",
+          "name": "Cancel Query",
+          "request": {
+            "name": "Cancel Query",
+            "description": {
+              "content": "Cancels a running query. Clients should DELETE the nextUri returned by the most recent QueryResults response to abort execution.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "statement",
+                ":queryId",
+                ":token"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "queryId",
+                  "description": "(Required) The unique query identifier"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<long>",
+                  "key": "token",
+                  "description": "(Required) Sequential token matching the current position"
+                },
+                {
+                  "description": "Trino coordinator hostname or IP",
+                  "type": "any",
+                  "value": "{{host}}",
+                  "key": "host"
+                },
+                {
+                  "description": "Trino coordinator HTTP port",
+                  "type": "any",
+                  "value": "{{port}}",
+                  "key": "port"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "(Required) The user identity",
+                "key": "X-Trino-User",
+                "value": "<string>"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "e8b03983-b23a-4200-aef2-60c9ff187e7f",
+              "name": "Query successfully cancelled",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "statement",
+                    ":queryId",
+                    ":token"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "queryId",
+                      "description": "(Required) The unique query identifier"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<long>",
+                      "key": "token",
+                      "description": "(Required) Sequential token matching the current position"
+                    },
+                    {
+                      "description": "Trino coordinator hostname or IP",
+                      "type": "any",
+                      "value": "{{host}}",
+                      "key": "host"
+                    },
+                    {
+                      "description": "Trino coordinator HTTP port",
+                      "type": "any",
+                      "value": "{{port}}",
+                      "key": "port"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) The user identity",
+                    "key": "X-Trino-User",
+                    "value": "<string>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "b5567aa2-35de-461d-8ede-2d7f2a93508b",
+              "name": "Query not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "statement",
+                    ":queryId",
+                    ":token"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "queryId",
+                      "description": "(Required) The unique query identifier"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<long>",
+                      "key": "token",
+                      "description": "(Required) Sequential token matching the current position"
+                    },
+                    {
+                      "description": "Trino coordinator hostname or IP",
+                      "type": "any",
+                      "value": "{{host}}",
+                      "key": "host"
+                    },
+                    {
+                      "description": "Trino coordinator HTTP port",
+                      "type": "any",
+                      "value": "{{port}}",
+                      "key": "port"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) The user identity",
+                    "key": "X-Trino-User",
+                    "value": "<string>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "0b5bf634-3226-4eea-91f9-b4adf361d0f6",
+          "name": "List Active Queries",
+          "request": {
+            "name": "List Active Queries",
+            "description": {
+              "content": "Returns a list of currently running and recently completed queries on the Trino coordinator. Useful for monitoring and management UIs.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "query"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "state",
+                  "value": "<string>",
+                  "description": "Filter queries by state"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "100",
+                  "description": "Maximum number of queries to return"
+                }
+              ],
+              "variable": [
+                {
+                  "description": "Trino coordinator hostname or IP",
+                  "type": "any",
+                  "value": "{{host}}",
+                  "key": "host"
+                },
+                {
+                  "description": "Trino coordinator HTTP port",
+                  "type": "any",
+                  "value": "{{port}}",
+                  "key": "port"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "fb4556b3-a263-445a-a3f0-56afa563cbc5",
+              "name": "List of query summaries",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "query"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "state",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "description": "Trino coordinator hostname or IP",
+                      "type": "any",
+                      "value": "{{host}}",
+                      "key": "host"
+                    },
+                    {
+                      "description": "Trino coordinator HTTP port",
+                      "type": "any",
+                      "value": "{{port}}",
+                      "key": "port"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"queryId\": \"string\",\n    \"state\": \"string\",\n    \"query\": \"string\",\n    \"self\": \"https://cSFXu.yaoyJG2kApsKsvXeU76Mw-N\",\n    \"queryStats\": {\n      \"state\": \"QUEUED\",\n      \"queued\": false,\n      \"scheduled\": false,\n      \"nodes\": 3401,\n      \"totalSplits\": 258,\n      \"queuedSplits\": 7124,\n      \"runningSplits\": 1770,\n      \"completedSplits\": 6534,\n      \"cpuTimeMillis\": 191,\n      \"wallTimeMillis\": 2383,\n      \"queuedTimeMillis\": 9501,\n      \"elapsedTimeMillis\": 6962,\n      \"processedRows\": 4770,\n      \"processedBytes\": 618,\n      \"peakMemoryBytes\": 920,\n      \"spilledBytes\": 9075,\n      \"rootStage\": {\n        \"stageId\": \"string\",\n        \"state\": \"string\",\n        \"done\": false,\n        \"nodes\": 1417,\n        \"totalSplits\": 9073,\n        \"queuedSplits\": 2688,\n        \"runningSplits\": 8062,\n        \"completedSplits\": 1113,\n        \"cpuTimeMillis\": 9806,\n        \"wallTimeMillis\": 1872,\n        \"processedRows\": 1058,\n        \"processedBytes\": 9803,\n        \"subStages\": [\n          {\n            \"value\": \"<Circular reference to #/components/schemas/StageStats detected>\"\n          },\n          {\n            \"value\": \"<Circular reference to #/components/schemas/StageStats detected>\"\n          }\n        ]\n      },\n      \"progressPercentage\": 40.62083722805174\n    },\n    \"session\": {\n      \"user\": \"string\",\n      \"catalog\": \"string\",\n      \"schema\": \"string\",\n      \"source\": \"string\"\n    }\n  },\n  {\n    \"queryId\": \"string\",\n    \"state\": \"string\",\n    \"query\": \"string\",\n    \"self\": \"https://NtbmApzOPmTDfxSBkEPSHJUcgAKn.phRsPJLgQBXV-Os8IzqIHLe5fun5toIH1Maa9\",\n    \"queryStats\": {\n      \"state\": \"STARTING\",\n      \"queued\": false,\n      \"scheduled\": true,\n      \"nodes\": 8089,\n      \"totalSplits\": 1602,\n      \"queuedSplits\": 214,\n      \"runningSplits\": 7692,\n      \"completedSplits\": 2351,\n      \"cpuTimeMillis\": 5049,\n      \"wallTimeMillis\": 1512,\n      \"queuedTimeMillis\": 8927,\n      \"elapsedTimeMillis\": 8857,\n      \"processedRows\": 9094,\n      \"processedBytes\": 2746,\n      \"peakMemoryBytes\": 1182,\n      \"spilledBytes\": 70,\n      \"rootStage\": {\n        \"stageId\": \"string\",\n        \"state\": \"string\",\n        \"done\": true,\n        \"nodes\": 1322,\n        \"totalSplits\": 8159,\n        \"queuedSplits\": 2981,\n        \"runningSplits\": 9249,\n        \"completedSplits\": 5160,\n        \"cpuTimeMillis\": 1425,\n        \"wallTimeMillis\": 7862,\n        \"processedRows\": 7641,\n        \"processedBytes\": 3205,\n        \"subStages\": [\n          {\n            \"value\": \"<Circular reference to #/components/schemas/StageStats detected>\"\n          },\n          {\n            \"value\": \"<Circular reference to #/components/schemas/StageStats detected>\"\n          }\n        ]\n      },\n      \"progressPercentage\": 81.45154053584321\n    },\n    \"session\": {\n      \"user\": \"string\",\n      \"catalog\": \"string\",\n      \"schema\": \"string\",\n      \"source\": \"string\"\n    }\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "7c66e605-15ff-4e47-abdf-01c6f1f3e866",
+      "name": "Cluster",
+      "description": {
+        "content": "Cluster status and node information",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "6d161be0-3be6-4f6b-8c77-4818b49c39e6",
+          "name": "Get Cluster Info",
+          "request": {
+            "name": "Get Cluster Info",
+            "description": {
+              "content": "Returns general information about the Trino cluster including version, uptime, and whether the coordinator is still starting up. Used by load balancers and Trino Gateway to verify cluster health.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "info"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "Trino coordinator hostname or IP",
+                  "type": "any",
+                  "value": "{{host}}",
+                  "key": "host"
+                },
+                {
+                  "description": "Trino coordinator HTTP port",
+                  "type": "any",
+                  "value": "{{port}}",
+                  "key": "port"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "22d9250b-44c2-47f2-a7a3-bf941623011f",
+              "name": "Cluster information",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "info"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "Trino coordinator hostname or IP",
+                      "type": "any",
+                      "value": "{{host}}",
+                      "key": "host"
+                    },
+                    {
+                      "description": "Trino coordinator HTTP port",
+                      "type": "any",
+                      "value": "{{port}}",
+                      "key": "port"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"nodeVersion\": {\n    \"version\": \"480\"\n  },\n  \"environment\": \"production\",\n  \"coordinator\": false,\n  \"starting\": true,\n  \"uptime\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "61f052e0-a9cd-429a-ad97-42b21dbdaf0f",
+          "name": "List Cluster Nodes",
+          "request": {
+            "name": "List Cluster Nodes",
+            "description": {
+              "content": "Returns a list of all active worker nodes in the Trino cluster, including their node ID, URI, last heartbeat time, and resource usage.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "node"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "Trino coordinator hostname or IP",
+                  "type": "any",
+                  "value": "{{host}}",
+                  "key": "host"
+                },
+                {
+                  "description": "Trino coordinator HTTP port",
+                  "type": "any",
+                  "value": "{{port}}",
+                  "key": "port"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "8a4b00a2-df45-49e7-95a5-efc67741cf14",
+              "name": "List of active nodes",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "node"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "description": "Trino coordinator hostname or IP",
+                      "type": "any",
+                      "value": "{{host}}",
+                      "key": "host"
+                    },
+                    {
+                      "description": "Trino coordinator HTTP port",
+                      "type": "any",
+                      "value": "{{port}}",
+                      "key": "port"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"nodeId\": \"string\",\n    \"nodeIp\": \"string\",\n    \"lastResponseTime\": \"1976-09-06T16:11:41.054Z\",\n    \"recentRequests\": 785.3337081225686,\n    \"recentFailures\": 3046.2958609489033,\n    \"recentSuccesses\": 9927.065539929565,\n    \"age\": \"string\"\n  },\n  {\n    \"nodeId\": \"string\",\n    \"nodeIp\": \"string\",\n    \"lastResponseTime\": \"1963-11-07T17:50:48.422Z\",\n    \"recentRequests\": 8144.055854576772,\n    \"recentFailures\": 3895.1911372878544,\n    \"recentSuccesses\": 4490.884880619647,\n    \"age\": \"string\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "description": {
+        "content": "Trino coordinator hostname or IP",
+        "type": "text/plain"
+      },
+      "type": "any",
+      "value": "localhost",
+      "key": "host"
+    },
+    {
+      "description": {
+        "content": "Trino coordinator HTTP port",
+        "type": "text/plain"
+      },
+      "type": "any",
+      "value": "8080",
+      "key": "port"
+    },
+    {
+      "type": "string",
+      "value": "http://{{host}}:{{port}}",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "24fb234d-d206-4c92-843d-e6735c632454",
+    "name": "Trino Client REST API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Trino Client REST API allows clients to submit SQL queries to a Trino coordinator and retrieve results. The protocol is HTTP-based: clients POST a query to /v1/statement, then poll GET on the returned nextUri until results are fully retrieved, and may DELETE nextUri to cancel a running query. Trino is a distributed SQL query engine for big data analytics supporting connectors to data lakes, relational databases, and NoSQL stores.\n\nContact Support:\n Name: Trino Community",
+      "type": "text/plain"
+    }
+  }
+}
