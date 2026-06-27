@@ -98,7 +98,7 @@ common:
     description: 'null'
   - url: https://trino.io/community
     name: "Trino |\_Trino Community"
-    type: Discussions
+    type: Forums
     description: 'null'
   - name: Features
     type: Features
