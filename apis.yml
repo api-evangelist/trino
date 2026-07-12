@@ -30,6 +30,8 @@ tags:
   - SQL
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 common:
+  - type: DomainSecurity
+    url: security/trino-domain-security.yml
   - url: https://github.com/trinodb
     name: GitHub Organization
     type: GitHubOrganization
