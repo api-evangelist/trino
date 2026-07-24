@@ -1,0 +1,111 @@
+openapi: 3.0.3
+info:
+  title: Trino Client REST Cluster API
+  description: 'The Trino Client REST API allows clients to submit SQL queries to a Trino coordinator and retrieve results. The protocol is HTTP-based: clients POST a query to /v1/statement, then poll GET on the returned nextUri until results are fully retrieved, and may DELETE nextUri to cancel a running query. Trino is a distributed SQL query engine for big data analytics supporting connectors to data lakes, relational databases, and NoSQL stores.'
+  version: '480'
+  contact:
+    name: Trino Community
+    url: https://trino.io/community.html
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+servers:
+- url: http://{host}:{port}
+  description: Trino coordinator
+  variables:
+    host:
+      default: localhost
+      description: Trino coordinator hostname or IP
+    port:
+      default: '8080'
+      description: Trino coordinator HTTP port
+security: []
+tags:
+- name: Cluster
+  description: Cluster status and node information
+paths:
+  /v1/info:
+    get:
+      operationId: getClusterInfo
+      summary: Get Cluster Info
+      description: Returns general information about the Trino cluster including version, uptime, and whether the coordinator is still starting up. Used by load balancers and Trino Gateway to verify cluster health.
+      tags:
+      - Cluster
+      responses:
+        '200':
+          description: Cluster information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerInfo'
+  /v1/node:
+    get:
+      operationId: listNodes
+      summary: List Cluster Nodes
+      description: Returns a list of all active worker nodes in the Trino cluster, including their node ID, URI, last heartbeat time, and resource usage.
+      tags:
+      - Cluster
+      responses:
+        '200':
+          description: List of active nodes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NodeStatus'
+components:
+  schemas:
+    ServerInfo:
+      type: object
+      description: Trino cluster information
+      properties:
+        nodeVersion:
+          type: object
+          properties:
+            version:
+              type: string
+              description: Trino release version
+              example: '480'
+        environment:
+          type: string
+          description: Trino environment name (from node.environment config)
+          example: production
+        coordinator:
+          type: boolean
+          description: True if this node is the coordinator
+        starting:
+          type: boolean
+          description: True if the cluster is still initializing
+        uptime:
+          type: string
+          description: Human-readable uptime duration
+    NodeStatus:
+      type: object
+      description: Status of a Trino cluster node
+      properties:
+        nodeId:
+          type: string
+          description: Unique node identifier
+        nodeIp:
+          type: string
+          description: Node IP address
+        lastResponseTime:
+          type: string
+          format: date-time
+          description: Timestamp of last heartbeat
+        recentRequests:
+          type: number
+          format: double
+        recentFailures:
+          type: number
+          format: double
+        recentSuccesses:
+          type: number
+          format: double
+        age:
+          type: string
+          description: Duration since node joined the cluster
+externalDocs:
+  description: Trino Client REST API Documentation
+  url: https://trino.io/docs/current/develop/client-protocol.html
