@@ -1,24 +1,30 @@
 aid: trino
 url: https://raw.githubusercontent.com/api-evangelist/trino/refs/heads/main/apis.yml
 apis:
-  - aid: trino:trino-client-api
-    name: Trino Client REST API
-    tags:
-      - Analytics
-      - Big Data
-      - Queries
-      - SQL
-    humanURL: https://trino.io/docs/current/develop/client-protocol.html
-    baseURL: http://localhost:8080
-    properties:
-      - url: https://trino.io/docs/current/develop/client-protocol.html
-        type: Documentation
-      - url: openapi/trino-client-api-openapi.yml
-        type: OpenAPI
-    description: >-
-      The Trino Client REST API enables clients to submit SQL queries to a Trino coordinator and retrieve results.
-      Clients POST SQL to /v1/statement, then poll GET on the returned nextUri, and may DELETE nextUri to cancel. Used
-      by all Trino client drivers (Python, Go, Java, JavaScript) and data tools like dbt, Grafana, and Apache Superset.
+- aid: trino:trino-cluster-api
+  name: Trino Cluster API
+  description: Cluster status and node information
+  humanURL: https://trino.io/docs/current/develop/client-protocol.html
+  baseURL: http://localhost:8080
+  tags:
+  - Cluster
+  properties:
+  - type: OpenAPI
+    url: openapi/trino-cluster-api-openapi.yml
+  - type: Documentation
+    url: https://trino.io/docs/current/develop/client-protocol.html
+- aid: trino:trino-queries-api
+  name: Trino Queries API
+  description: Submit and manage SQL queries
+  humanURL: https://trino.io/docs/current/develop/client-protocol.html
+  baseURL: http://localhost:8080
+  tags:
+  - Queries
+  properties:
+  - type: OpenAPI
+    url: openapi/trino-queries-api-openapi.yml
+  - type: Documentation
+    url: https://trino.io/docs/current/develop/client-protocol.html
 name: Trino
 tags:
   - Analytics
@@ -28,7 +34,19 @@ tags:
   - NoSQL
   - Queries
   - SQL
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: freemium
+  onboarding: unknown
+  trial: false
+  try_now: false
+  public: false
+  label: Freemium
+  confidence: medium
+  source:
+  - plans
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/trino.png
 common:
   - type: AgenticAccess
     url: agentic-access/trino-agentic-access.yml
