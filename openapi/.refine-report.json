@@ -1,0 +1,16 @@
+{
+  "provider": "trino",
+  "sources": [
+    "trino-cluster-api-openapi.yml",
+    "trino-queries-api-openapi.yml"
+  ],
+  "outputs": [
+    "trino-cluster-api-openapi.yml",
+    "trino-queries-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

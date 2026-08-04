@@ -1,0 +1,690 @@
+openapi: 3.0.3
+info:
+  title: Trino Client REST API
+  description: >-
+    The Trino Client REST API allows clients to submit SQL queries to a Trino coordinator
+    and retrieve results. The protocol is HTTP-based: clients POST a query to /v1/statement,
+    then poll GET on the returned nextUri until results are fully retrieved, and may DELETE
+    nextUri to cancel a running query. Trino is a distributed SQL query engine for big data
+    analytics supporting connectors to data lakes, relational databases, and NoSQL stores.
+  version: '480'
+  contact:
+    name: Trino Community
+    url: https://trino.io/community.html
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+externalDocs:
+  description: Trino Client REST API Documentation
+  url: https://trino.io/docs/current/develop/client-protocol.html
+servers:
+  - url: http://{host}:{port}
+    description: Trino coordinator
+    variables:
+      host:
+        default: localhost
+        description: Trino coordinator hostname or IP
+      port:
+        default: '8080'
+        description: Trino coordinator HTTP port
+security: []
+tags:
+  - name: Queries
+    description: Submit and manage SQL queries
+  - name: Cluster
+    description: Cluster status and node information
+paths:
+  /v1/statement:
+    post:
+      operationId: submitStatement
+      summary: Submit SQL Statement
+      description: >-
+        Submits an SQL query string for execution. Returns an initial QueryResults
+        response which may contain the first batch of results and/or a nextUri for
+        polling subsequent results. Clients must include the X-Trino-User header at
+        minimum. Additional context headers (catalog, schema, session properties) may
+        be provided to configure the query environment.
+      tags:
+        - Queries
+      parameters:
+        - name: X-Trino-User
+          in: header
+          required: true
+          description: The user identity submitting the query
+          schema:
+            type: string
+          example: alice
+        - name: X-Trino-Catalog
+          in: header
+          required: false
+          description: Default catalog for the query session
+          schema:
+            type: string
+          example: hive
+        - name: X-Trino-Schema
+          in: header
+          required: false
+          description: Default schema for the query session
+          schema:
+            type: string
+          example: default
+        - name: X-Trino-Source
+          in: header
+          required: false
+          description: Identifies the client application submitting the query
+          schema:
+            type: string
+          example: my-app
+        - name: X-Trino-Session
+          in: header
+          required: false
+          description: >-
+            Comma-separated list of session property assignments in
+            key=value format
+          schema:
+            type: string
+          example: query_max_memory=10GB,query_max_run_time=5m
+        - name: X-Trino-Transaction-Id
+          in: header
+          required: false
+          description: Transaction identifier for query grouping. Use NONE for auto-commit.
+          schema:
+            type: string
+          example: NONE
+        - name: X-Trino-Client-Tags
+          in: header
+          required: false
+          description: Comma-separated client tags for resource group matching
+          schema:
+            type: string
+        - name: X-Trino-Client-Info
+          in: header
+          required: false
+          description: Arbitrary client-supplied metadata about the client
+          schema:
+            type: string
+        - name: X-Trino-Time-Zone
+          in: header
+          required: false
+          description: Time zone for the query session (IANA tz database format)
+          schema:
+            type: string
+          example: America/New_York
+        - name: X-Trino-Language
+          in: header
+          required: false
+          description: BCP 47 language tag for locale-sensitive operations
+          schema:
+            type: string
+          example: en-US
+        - name: X-Trino-Trace-Token
+          in: header
+          required: false
+          description: External trace token for distributed tracing correlation
+          schema:
+            type: string
+        - name: X-Trino-Extra-Credential
+          in: header
+          required: false
+          description: >-
+            Connector-specific extra credentials in name=value format.
+            May appear multiple times.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        description: The SQL query string to execute
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: SELECT * FROM system.runtime.nodes
+      responses:
+        '200':
+          description: Query accepted and initial results returned
+          headers:
+            X-Trino-Set-Catalog:
+              description: New default catalog set by the query (USE CATALOG statement)
+              schema:
+                type: string
+            X-Trino-Set-Schema:
+              description: New default schema set by the query (USE SCHEMA statement)
+              schema:
+                type: string
+            X-Trino-Set-Session:
+              description: Session property set by the query
+              schema:
+                type: string
+            X-Trino-Clear-Session:
+              description: Session property cleared by the query
+              schema:
+                type: string
+            X-Trino-Started-Transaction-Id:
+              description: Transaction ID started by a START TRANSACTION statement
+              schema:
+                type: string
+            X-Trino-Clear-Transaction-Id:
+              description: Indicates the transaction was committed or rolled back
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryResults'
+        '400':
+          description: Bad request — malformed SQL or invalid session parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryError'
+        '429':
+          description: >-
+            Too many requests. Client must wait the duration specified in
+            Retry-After header before retrying.
+          headers:
+            Retry-After:
+              description: Number of seconds to wait before retrying
+              schema:
+                type: integer
+        '503':
+          description: Service unavailable — transient cluster error; retry after 50-100ms
+
+  /v1/statement/{queryId}/{token}:
+    get:
+      operationId: getQueryResults
+      summary: Get Query Results
+      description: >-
+        Retrieves the next batch of results for a running query. Clients should
+        follow the nextUri from a previous QueryResults response. When no
+        nextUri is present in the response, the query is complete.
+      tags:
+        - Queries
+      parameters:
+        - name: queryId
+          in: path
+          required: true
+          description: The unique query identifier returned by POST /v1/statement
+          schema:
+            type: string
+          example: 20240101_120000_00001_abcde
+        - name: token
+          in: path
+          required: true
+          description: Sequential token for paging through results
+          schema:
+            type: integer
+            format: int64
+          example: 1
+        - name: X-Trino-User
+          in: header
+          required: true
+          description: The user identity (must match original query submission)
+          schema:
+            type: string
+        - name: maxWait
+          in: query
+          required: false
+          description: Maximum duration to wait for results before returning empty batch
+          schema:
+            type: string
+          example: 2s
+        - name: targetResultSize
+          in: query
+          required: false
+          description: Desired result batch size hint
+          schema:
+            type: string
+          example: 1MB
+      responses:
+        '200':
+          description: Next batch of results (may be empty if still processing)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryResults'
+        '404':
+          description: Query not found — expired or already cancelled
+        '429':
+          description: Too many concurrent polls; wait and retry
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+    delete:
+      operationId: cancelQuery
+      summary: Cancel Query
+      description: >-
+        Cancels a running query. Clients should DELETE the nextUri returned by
+        the most recent QueryResults response to abort execution.
+      tags:
+        - Queries
+      parameters:
+        - name: queryId
+          in: path
+          required: true
+          description: The unique query identifier
+          schema:
+            type: string
+        - name: token
+          in: path
+          required: true
+          description: Sequential token matching the current position
+          schema:
+            type: integer
+            format: int64
+        - name: X-Trino-User
+          in: header
+          required: true
+          description: The user identity
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Query successfully cancelled
+        '404':
+          description: Query not found
+
+  /v1/info:
+    get:
+      operationId: getClusterInfo
+      summary: Get Cluster Info
+      description: >-
+        Returns general information about the Trino cluster including version,
+        uptime, and whether the coordinator is still starting up. Used by
+        load balancers and Trino Gateway to verify cluster health.
+      tags:
+        - Cluster
+      responses:
+        '200':
+          description: Cluster information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerInfo'
+
+  /v1/node:
+    get:
+      operationId: listNodes
+      summary: List Cluster Nodes
+      description: >-
+        Returns a list of all active worker nodes in the Trino cluster,
+        including their node ID, URI, last heartbeat time, and resource usage.
+      tags:
+        - Cluster
+      responses:
+        '200':
+          description: List of active nodes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NodeStatus'
+
+  /v1/query:
+    get:
+      operationId: listQueries
+      summary: List Active Queries
+      description: >-
+        Returns a list of currently running and recently completed queries
+        on the Trino coordinator. Useful for monitoring and management UIs.
+      tags:
+        - Queries
+      parameters:
+        - name: state
+          in: query
+          required: false
+          description: Filter queries by state
+          schema:
+            type: string
+            enum:
+              - QUEUED
+              - PLANNING
+              - STARTING
+              - RUNNING
+              - FINISHING
+              - FINISHED
+              - FAILED
+        - name: limit
+          in: query
+          required: false
+          description: Maximum number of queries to return
+          schema:
+            type: integer
+            default: 100
+      responses:
+        '200':
+          description: List of query summaries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QuerySummary'
+
+components:
+  schemas:
+    QueryResults:
+      type: object
+      description: Response from /v1/statement or a nextUri GET containing query results
+      properties:
+        id:
+          type: string
+          description: Unique query identifier
+          example: 20240101_120000_00001_abcde
+        infoUri:
+          type: string
+          format: uri
+          description: URI for human-readable query information in the Trino Web UI
+        nextUri:
+          type: string
+          format: uri
+          description: >-
+            URI to fetch the next batch of results. Absent when the query is complete.
+            Clients must GET this URI to continue receiving results.
+        columns:
+          type: array
+          description: Column definitions for the result set
+          items:
+            $ref: '#/components/schemas/Column'
+        data:
+          type: array
+          description: >-
+            Result rows as arrays of values ordered by column definitions.
+            Absent when no data is available yet.
+          items:
+            type: array
+            items: {}
+        updateType:
+          type: string
+          description: >-
+            DDL/DML operation type for non-SELECT statements
+            (e.g., "CREATE TABLE", "INSERT")
+          example: CREATE TABLE
+        updateCount:
+          type: integer
+          format: int64
+          description: Number of rows affected by a DML statement
+        stats:
+          $ref: '#/components/schemas/QueryStats'
+        error:
+          $ref: '#/components/schemas/QueryError'
+        warnings:
+          type: array
+          description: Non-fatal warnings from query execution
+          items:
+            $ref: '#/components/schemas/Warning'
+
+    Column:
+      type: object
+      description: Column metadata in a query result set
+      required:
+        - name
+        - type
+      properties:
+        name:
+          type: string
+          description: Column name
+          example: node_id
+        type:
+          type: string
+          description: Trino type name
+          example: varchar
+        typeSignature:
+          type: object
+          description: Structured type signature for complex types
+          properties:
+            rawType:
+              type: string
+            arguments:
+              type: array
+              items: {}
+
+    QueryStats:
+      type: object
+      description: Runtime statistics for a query
+      properties:
+        state:
+          type: string
+          description: Current query state
+          enum:
+            - QUEUED
+            - PLANNING
+            - STARTING
+            - RUNNING
+            - FINISHING
+            - FINISHED
+            - FAILED
+        queued:
+          type: boolean
+        scheduled:
+          type: boolean
+        nodes:
+          type: integer
+          description: Number of nodes participating in the query
+        totalSplits:
+          type: integer
+          format: int64
+        queuedSplits:
+          type: integer
+          format: int64
+        runningSplits:
+          type: integer
+          format: int64
+        completedSplits:
+          type: integer
+          format: int64
+        cpuTimeMillis:
+          type: integer
+          format: int64
+        wallTimeMillis:
+          type: integer
+          format: int64
+        queuedTimeMillis:
+          type: integer
+          format: int64
+        elapsedTimeMillis:
+          type: integer
+          format: int64
+        processedRows:
+          type: integer
+          format: int64
+        processedBytes:
+          type: integer
+          format: int64
+        peakMemoryBytes:
+          type: integer
+          format: int64
+        spilledBytes:
+          type: integer
+          format: int64
+        rootStage:
+          $ref: '#/components/schemas/StageStats'
+        progressPercentage:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 100
+
+    StageStats:
+      type: object
+      description: Statistics for a single query stage
+      properties:
+        stageId:
+          type: string
+        state:
+          type: string
+        done:
+          type: boolean
+        nodes:
+          type: integer
+        totalSplits:
+          type: integer
+          format: int64
+        queuedSplits:
+          type: integer
+          format: int64
+        runningSplits:
+          type: integer
+          format: int64
+        completedSplits:
+          type: integer
+          format: int64
+        cpuTimeMillis:
+          type: integer
+          format: int64
+        wallTimeMillis:
+          type: integer
+          format: int64
+        processedRows:
+          type: integer
+          format: int64
+        processedBytes:
+          type: integer
+          format: int64
+        subStages:
+          type: array
+          items:
+            $ref: '#/components/schemas/StageStats'
+
+    QueryError:
+      type: object
+      description: Error information when a query fails
+      properties:
+        message:
+          type: string
+          description: Human-readable error message
+          example: "Query exceeded maximum memory limit of 10GB"
+        sqlState:
+          type: string
+          description: ANSI SQL state code
+          example: "42000"
+        errorCode:
+          type: integer
+          description: Trino numeric error code
+        errorName:
+          type: string
+          description: Symbolic error name
+          example: QUERY_EXCEEDED_MEMORY_LIMIT
+        errorType:
+          type: string
+          description: Error classification
+          enum:
+            - USER_ERROR
+            - INTERNAL_ERROR
+            - INSUFFICIENT_RESOURCES
+            - EXTERNAL
+        errorLocation:
+          $ref: '#/components/schemas/ErrorLocation'
+        failureInfo:
+          type: object
+          description: Detailed exception information
+
+    ErrorLocation:
+      type: object
+      description: Source location of a query error
+      properties:
+        lineNumber:
+          type: integer
+          description: 1-based line number in the SQL query
+        columnNumber:
+          type: integer
+          description: 1-based column number in the SQL query
+
+    Warning:
+      type: object
+      description: Non-fatal warning from query execution
+      properties:
+        warningCode:
+          type: object
+          properties:
+            code:
+              type: integer
+            name:
+              type: string
+        message:
+          type: string
+
+    ServerInfo:
+      type: object
+      description: Trino cluster information
+      properties:
+        nodeVersion:
+          type: object
+          properties:
+            version:
+              type: string
+              description: Trino release version
+              example: '480'
+        environment:
+          type: string
+          description: Trino environment name (from node.environment config)
+          example: production
+        coordinator:
+          type: boolean
+          description: True if this node is the coordinator
+        starting:
+          type: boolean
+          description: True if the cluster is still initializing
+        uptime:
+          type: string
+          description: Human-readable uptime duration
+
+    NodeStatus:
+      type: object
+      description: Status of a Trino cluster node
+      properties:
+        nodeId:
+          type: string
+          description: Unique node identifier
+        nodeIp:
+          type: string
+          description: Node IP address
+        lastResponseTime:
+          type: string
+          format: date-time
+          description: Timestamp of last heartbeat
+        recentRequests:
+          type: number
+          format: double
+        recentFailures:
+          type: number
+          format: double
+        recentSuccesses:
+          type: number
+          format: double
+        age:
+          type: string
+          description: Duration since node joined the cluster
+
+    QuerySummary:
+      type: object
+      description: Summary of a query for list views
+      properties:
+        queryId:
+          type: string
+          description: Unique query identifier
+        state:
+          type: string
+          description: Current query state
+        query:
+          type: string
+          description: The SQL text (may be truncated)
+        self:
+          type: string
+          format: uri
+          description: URI for the full query detail
+        queryStats:
+          $ref: '#/components/schemas/QueryStats'
+        session:
+          type: object
+          description: Session context for the query
+          properties:
+            user:
+              type: string
+            catalog:
+              type: string
+            schema:
+              type: string
+            source:
+              type: string
