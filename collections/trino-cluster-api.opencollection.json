@@ -1,0 +1,40 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Trino Client REST Cluster API",
+    "version": "480"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Cluster",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Cluster Info",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://{host}:{port}/v1/info"
+          },
+          "docs": "Returns general information about the Trino cluster including version, uptime, and whether the coordinator is still starting up. Used by load balancers and Trino Gateway to verify cluster health."
+        },
+        {
+          "info": {
+            "name": "List Cluster Nodes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "http://{host}:{port}/v1/node"
+          },
+          "docs": "Returns a list of all active worker nodes in the Trino cluster, including their node ID, URI, last heartbeat time, and resource usage."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
