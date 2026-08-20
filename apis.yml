@@ -19,6 +19,8 @@ apis:
   humanURL: https://trino.io/docs/current/develop/client-protocol.html
   baseURL: http://localhost:8080
   tags:
+  - Query
+  tags_raw:
   - Queries
   properties:
   - type: OpenAPI
@@ -27,6 +29,14 @@ apis:
     url: https://trino.io/docs/current/develop/client-protocol.html
 name: Trino
 tags:
+  - Analytics
+  - Big Data
+  - Distributed SQL
+  - MySQL
+  - NoSQL
+  - Query
+  - SQL
+tags_raw:
   - Analytics
   - Big Data
   - Distributed SQL
