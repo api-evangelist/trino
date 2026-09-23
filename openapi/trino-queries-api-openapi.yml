@@ -1,6 +1,6 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Trino Client REST Cluster Queries API
+  title: Trino Client REST Queries API
   description: 'The Trino Client REST API allows clients to submit SQL queries to a Trino coordinator and retrieve results. The protocol is HTTP-based: clients POST a query to /v1/statement, then poll GET on the returned nextUri until results are fully retrieved, and may DELETE nextUri to cancel a running query. Trino is a distributed SQL query engine for big data analytics supporting connectors to data lakes, relational databases, and NoSQL stores.'
   version: '480'
   contact:
@@ -370,50 +370,37 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/StageStats'
-    QueryResults:
+    QuerySummary:
       type: object
-      description: Response from /v1/statement or a nextUri GET containing query results
+      description: Summary of a query for list views
       properties:
-        id:
+        queryId:
           type: string
           description: Unique query identifier
-          example: 20240101_120000_00001_abcde
-        infoUri:
+        state:
+          type: string
+          description: Current query state
+        query:
+          type: string
+          description: The SQL text (may be truncated)
+        self:
           type: string
           format: uri
-          description: URI for human-readable query information in the Trino Web UI
-        nextUri:
-          type: string
-          format: uri
-          description: URI to fetch the next batch of results. Absent when the query is complete. Clients must GET this URI to continue receiving results.
-        columns:
-          type: array
-          description: Column definitions for the result set
-          items:
-            $ref: '#/components/schemas/Column'
-        data:
-          type: array
-          description: Result rows as arrays of values ordered by column definitions. Absent when no data is available yet.
-          items:
-            type: array
-            items: {}
-        updateType:
-          type: string
-          description: DDL/DML operation type for non-SELECT statements (e.g., "CREATE TABLE", "INSERT")
-          example: CREATE TABLE
-        updateCount:
-          type: integer
-          format: int64
-          description: Number of rows affected by a DML statement
-        stats:
+          description: URI for the full query detail
+        queryStats:
           $ref: '#/components/schemas/QueryStats'
-        error:
-          $ref: '#/components/schemas/QueryError'
-        warnings:
-          type: array
-          description: Non-fatal warnings from query execution
-          items:
-            $ref: '#/components/schemas/Warning'
+        session:
+          type: object
+          description: Session context for the query
+          properties:
+            user:
+              type: string
+            catalog:
+              type: string
+            schema:
+              type: string
+            source:
+              type: string
     Warning:
       type: object
       description: Non-fatal warning from query execution
@@ -524,37 +511,50 @@ components:
           format: double
           minimum: 0
           maximum: 100
-    QuerySummary:
+    QueryResults:
       type: object
-      description: Summary of a query for list views
+      description: Response from /v1/statement or a nextUri GET containing query results
       properties:
-        queryId:
+        id:
           type: string
           description: Unique query identifier
-        state:
-          type: string
-          description: Current query state
-        query:
-          type: string
-          description: The SQL text (may be truncated)
-        self:
+          example: 20240101_120000_00001_abcde
+        infoUri:
           type: string
           format: uri
-          description: URI for the full query detail
-        queryStats:
+          description: URI for human-readable query information in the Trino Web UI
+        nextUri:
+          type: string
+          format: uri
+          description: URI to fetch the next batch of results. Absent when the query is complete. Clients must GET this URI to continue receiving results.
+        columns:
+          type: array
+          description: Column definitions for the result set
+          items:
+            $ref: '#/components/schemas/Column'
+        data:
+          type: array
+          description: Result rows as arrays of values ordered by column definitions. Absent when no data is available yet.
+          items:
+            type: array
+            items: {}
+        updateType:
+          type: string
+          description: DDL/DML operation type for non-SELECT statements (e.g., "CREATE TABLE", "INSERT")
+          example: CREATE TABLE
+        updateCount:
+          type: integer
+          format: int64
+          description: Number of rows affected by a DML statement
+        stats:
           $ref: '#/components/schemas/QueryStats'
-        session:
-          type: object
-          description: Session context for the query
-          properties:
-            user:
-              type: string
-            catalog:
-              type: string
-            schema:
-              type: string
-            source:
-              type: string
+        error:
+          $ref: '#/components/schemas/QueryError'
+        warnings:
+          type: array
+          description: Non-fatal warnings from query execution
+          items:
+            $ref: '#/components/schemas/Warning'
 externalDocs:
   description: Trino Client REST API Documentation
   url: https://trino.io/docs/current/develop/client-protocol.html
