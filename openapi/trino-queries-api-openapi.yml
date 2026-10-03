@@ -296,16 +296,30 @@ paths:
                   $ref: '#/components/schemas/QuerySummary'
 components:
   schemas:
-    ErrorLocation:
+    Column:
       type: object
-      description: Source location of a query error
+      description: Column metadata in a query result set
+      required:
+      - name
+      - type
       properties:
-        lineNumber:
-          type: integer
-          description: 1-based line number in the SQL query
-        columnNumber:
-          type: integer
-          description: 1-based column number in the SQL query
+        name:
+          type: string
+          description: Column name
+          example: node_id
+        type:
+          type: string
+          description: Trino type name
+          example: varchar
+        typeSignature:
+          type: object
+          description: Structured type signature for complex types
+          properties:
+            rawType:
+              type: string
+            arguments:
+              type: array
+              items: {}
     QueryStats:
       type: object
       description: Runtime statistics for a query
@@ -371,61 +385,50 @@ components:
           format: double
           minimum: 0
           maximum: 100
-    Column:
+    QueryResults:
       type: object
-      description: Column metadata in a query result set
-      required:
-      - name
-      - type
+      description: Response from /v1/statement or a nextUri GET containing query results
       properties:
-        name:
-          type: string
-          description: Column name
-          example: node_id
-        type:
-          type: string
-          description: Trino type name
-          example: varchar
-        typeSignature:
-          type: object
-          description: Structured type signature for complex types
-          properties:
-            rawType:
-              type: string
-            arguments:
-              type: array
-              items: {}
-    QuerySummary:
-      type: object
-      description: Summary of a query for list views
-      properties:
-        queryId:
+        id:
           type: string
           description: Unique query identifier
-        state:
-          type: string
-          description: Current query state
-        query:
-          type: string
-          description: The SQL text (may be truncated)
-        self:
+          example: 20240101_120000_00001_abcde
+        infoUri:
           type: string
           format: uri
-          description: URI for the full query detail
-        queryStats:
+          description: URI for human-readable query information in the Trino Web UI
+        nextUri:
+          type: string
+          format: uri
+          description: URI to fetch the next batch of results. Absent when the query is complete. Clients must GET this URI to continue receiving results.
+        columns:
+          type: array
+          description: Column definitions for the result set
+          items:
+            $ref: '#/components/schemas/Column'
+        data:
+          type: array
+          description: Result rows as arrays of values ordered by column definitions. Absent when no data is available yet.
+          items:
+            type: array
+            items: {}
+        updateType:
+          type: string
+          description: DDL/DML operation type for non-SELECT statements (e.g., "CREATE TABLE", "INSERT")
+          example: CREATE TABLE
+        updateCount:
+          type: integer
+          format: int64
+          description: Number of rows affected by a DML statement
+        stats:
           $ref: '#/components/schemas/QueryStats'
-        session:
-          type: object
-          description: Session context for the query
-          properties:
-            user:
-              type: string
-            catalog:
-              type: string
-            schema:
-              type: string
-            source:
-              type: string
+        error:
+          $ref: '#/components/schemas/QueryError'
+        warnings:
+          type: array
+          description: Non-fatal warnings from query execution
+          items:
+            $ref: '#/components/schemas/Warning'
     StageStats:
       type: object
       description: Statistics for a single query stage
@@ -498,50 +501,6 @@ components:
         failureInfo:
           type: object
           description: Detailed exception information
-    QueryResults:
-      type: object
-      description: Response from /v1/statement or a nextUri GET containing query results
-      properties:
-        id:
-          type: string
-          description: Unique query identifier
-          example: 20240101_120000_00001_abcde
-        infoUri:
-          type: string
-          format: uri
-          description: URI for human-readable query information in the Trino Web UI
-        nextUri:
-          type: string
-          format: uri
-          description: URI to fetch the next batch of results. Absent when the query is complete. Clients must GET this URI to continue receiving results.
-        columns:
-          type: array
-          description: Column definitions for the result set
-          items:
-            $ref: '#/components/schemas/Column'
-        data:
-          type: array
-          description: Result rows as arrays of values ordered by column definitions. Absent when no data is available yet.
-          items:
-            type: array
-            items: {}
-        updateType:
-          type: string
-          description: DDL/DML operation type for non-SELECT statements (e.g., "CREATE TABLE", "INSERT")
-          example: CREATE TABLE
-        updateCount:
-          type: integer
-          format: int64
-          description: Number of rows affected by a DML statement
-        stats:
-          $ref: '#/components/schemas/QueryStats'
-        error:
-          $ref: '#/components/schemas/QueryError'
-        warnings:
-          type: array
-          description: Non-fatal warnings from query execution
-          items:
-            $ref: '#/components/schemas/Warning'
     Warning:
       type: object
       description: Non-fatal warning from query execution
@@ -555,6 +514,47 @@ components:
               type: string
         message:
           type: string
+    QuerySummary:
+      type: object
+      description: Summary of a query for list views
+      properties:
+        queryId:
+          type: string
+          description: Unique query identifier
+        state:
+          type: string
+          description: Current query state
+        query:
+          type: string
+          description: The SQL text (may be truncated)
+        self:
+          type: string
+          format: uri
+          description: URI for the full query detail
+        queryStats:
+          $ref: '#/components/schemas/QueryStats'
+        session:
+          type: object
+          description: Session context for the query
+          properties:
+            user:
+              type: string
+            catalog:
+              type: string
+            schema:
+              type: string
+            source:
+              type: string
+    ErrorLocation:
+      type: object
+      description: Source location of a query error
+      properties:
+        lineNumber:
+          type: integer
+          description: 1-based line number in the SQL query
+        columnNumber:
+          type: integer
+          description: 1-based column number in the SQL query
 externalDocs:
   description: Trino Client REST API Documentation
   url: https://trino.io/docs/current/develop/client-protocol.html
