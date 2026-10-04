@@ -1,0 +1,27 @@
+slug: trino
+provider: Trino
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 1
+edges:
+- tag: Queries
+  spec_file: trino-queries-api-openapi.yml
+  capability_id: BC-610.50
+  capability_id_l1: BC-610
+  capability_name: Analytics & BI Management
+  confidence: 0.7
+  evidence: POST /v1/statement  submitStatement  Submit SQL Statement; "Trino is a distributed SQL query
+    engine for big data analytics supporting connectors to data lakes, relational databases, and NoSQL
+    stores"
+  reason: The operations submit analytical SQL, poll results and cancel queries across data lakes and
+    databases — this is the execution surface for analytics/BI querying. Mapped to Analytics & BI Management,
+    with moderate confidence since the API is a low-level query protocol rather than a reporting product.

@@ -69,6 +69,9 @@ accessModel:
   method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/trino.png
 common:
+  - type: CapabilityMap
+    url: capabilities/trino-capability-edges.yml
+    name: Trino Business Capability Map
   - type: AgenticAccess
     url: agentic-access/trino-agentic-access.yml
   - type: DomainSecurity
