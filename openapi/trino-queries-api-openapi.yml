@@ -296,30 +296,6 @@ paths:
                   $ref: '#/components/schemas/QuerySummary'
 components:
   schemas:
-    Column:
-      type: object
-      description: Column metadata in a query result set
-      required:
-      - name
-      - type
-      properties:
-        name:
-          type: string
-          description: Column name
-          example: node_id
-        type:
-          type: string
-          description: Trino type name
-          example: varchar
-        typeSignature:
-          type: object
-          description: Structured type signature for complex types
-          properties:
-            rawType:
-              type: string
-            arguments:
-              type: array
-              items: {}
     QueryStats:
       type: object
       description: Runtime statistics for a query
@@ -385,6 +361,101 @@ components:
           format: double
           minimum: 0
           maximum: 100
+    Warning:
+      type: object
+      description: Non-fatal warning from query execution
+      properties:
+        warningCode:
+          type: object
+          properties:
+            code:
+              type: integer
+            name:
+              type: string
+        message:
+          type: string
+    StageStats:
+      type: object
+      description: Statistics for a single query stage
+      properties:
+        stageId:
+          type: string
+        state:
+          type: string
+        done:
+          type: boolean
+        nodes:
+          type: integer
+        totalSplits:
+          type: integer
+          format: int64
+        queuedSplits:
+          type: integer
+          format: int64
+        runningSplits:
+          type: integer
+          format: int64
+        completedSplits:
+          type: integer
+          format: int64
+        cpuTimeMillis:
+          type: integer
+          format: int64
+        wallTimeMillis:
+          type: integer
+          format: int64
+        processedRows:
+          type: integer
+          format: int64
+        processedBytes:
+          type: integer
+          format: int64
+        subStages:
+          type: array
+          items:
+            $ref: '#/components/schemas/StageStats'
+    ErrorLocation:
+      type: object
+      description: Source location of a query error
+      properties:
+        lineNumber:
+          type: integer
+          description: 1-based line number in the SQL query
+        columnNumber:
+          type: integer
+          description: 1-based column number in the SQL query
+    QueryError:
+      type: object
+      description: Error information when a query fails
+      properties:
+        message:
+          type: string
+          description: Human-readable error message
+          example: Query exceeded maximum memory limit of 10GB
+        sqlState:
+          type: string
+          description: ANSI SQL state code
+          example: '42000'
+        errorCode:
+          type: integer
+          description: Trino numeric error code
+        errorName:
+          type: string
+          description: Symbolic error name
+          example: QUERY_EXCEEDED_MEMORY_LIMIT
+        errorType:
+          type: string
+          description: Error classification
+          enum:
+          - USER_ERROR
+          - INTERNAL_ERROR
+          - INSUFFICIENT_RESOURCES
+          - EXTERNAL
+        errorLocation:
+          $ref: '#/components/schemas/ErrorLocation'
+        failureInfo:
+          type: object
+          description: Detailed exception information
     QueryResults:
       type: object
       description: Response from /v1/statement or a nextUri GET containing query results
@@ -429,91 +500,6 @@ components:
           description: Non-fatal warnings from query execution
           items:
             $ref: '#/components/schemas/Warning'
-    StageStats:
-      type: object
-      description: Statistics for a single query stage
-      properties:
-        stageId:
-          type: string
-        state:
-          type: string
-        done:
-          type: boolean
-        nodes:
-          type: integer
-        totalSplits:
-          type: integer
-          format: int64
-        queuedSplits:
-          type: integer
-          format: int64
-        runningSplits:
-          type: integer
-          format: int64
-        completedSplits:
-          type: integer
-          format: int64
-        cpuTimeMillis:
-          type: integer
-          format: int64
-        wallTimeMillis:
-          type: integer
-          format: int64
-        processedRows:
-          type: integer
-          format: int64
-        processedBytes:
-          type: integer
-          format: int64
-        subStages:
-          type: array
-          items:
-            $ref: '#/components/schemas/StageStats'
-    QueryError:
-      type: object
-      description: Error information when a query fails
-      properties:
-        message:
-          type: string
-          description: Human-readable error message
-          example: Query exceeded maximum memory limit of 10GB
-        sqlState:
-          type: string
-          description: ANSI SQL state code
-          example: '42000'
-        errorCode:
-          type: integer
-          description: Trino numeric error code
-        errorName:
-          type: string
-          description: Symbolic error name
-          example: QUERY_EXCEEDED_MEMORY_LIMIT
-        errorType:
-          type: string
-          description: Error classification
-          enum:
-          - USER_ERROR
-          - INTERNAL_ERROR
-          - INSUFFICIENT_RESOURCES
-          - EXTERNAL
-        errorLocation:
-          $ref: '#/components/schemas/ErrorLocation'
-        failureInfo:
-          type: object
-          description: Detailed exception information
-    Warning:
-      type: object
-      description: Non-fatal warning from query execution
-      properties:
-        warningCode:
-          type: object
-          properties:
-            code:
-              type: integer
-            name:
-              type: string
-        message:
-          type: string
     QuerySummary:
       type: object
       description: Summary of a query for list views
@@ -545,16 +531,30 @@ components:
               type: string
             source:
               type: string
-    ErrorLocation:
+    Column:
       type: object
-      description: Source location of a query error
+      description: Column metadata in a query result set
+      required:
+      - name
+      - type
       properties:
-        lineNumber:
-          type: integer
-          description: 1-based line number in the SQL query
-        columnNumber:
-          type: integer
-          description: 1-based column number in the SQL query
+        name:
+          type: string
+          description: Column name
+          example: node_id
+        type:
+          type: string
+          description: Trino type name
+          example: varchar
+        typeSignature:
+          type: object
+          description: Structured type signature for complex types
+          properties:
+            rawType:
+              type: string
+            arguments:
+              type: array
+              items: {}
 externalDocs:
   description: Trino Client REST API Documentation
   url: https://trino.io/docs/current/develop/client-protocol.html

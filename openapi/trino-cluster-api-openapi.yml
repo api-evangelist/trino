@@ -56,30 +56,6 @@ paths:
                   $ref: '#/components/schemas/NodeStatus'
 components:
   schemas:
-    ServerInfo:
-      type: object
-      description: Trino cluster information
-      properties:
-        nodeVersion:
-          type: object
-          properties:
-            version:
-              type: string
-              description: Trino release version
-              example: '480'
-        environment:
-          type: string
-          description: Trino environment name (from node.environment config)
-          example: production
-        coordinator:
-          type: boolean
-          description: True if this node is the coordinator
-        starting:
-          type: boolean
-          description: True if the cluster is still initializing
-        uptime:
-          type: string
-          description: Human-readable uptime duration
     NodeStatus:
       type: object
       description: Status of a Trino cluster node
@@ -106,6 +82,30 @@ components:
         age:
           type: string
           description: Duration since node joined the cluster
+    ServerInfo:
+      type: object
+      description: Trino cluster information
+      properties:
+        nodeVersion:
+          type: object
+          properties:
+            version:
+              type: string
+              description: Trino release version
+              example: '480'
+        environment:
+          type: string
+          description: Trino environment name (from node.environment config)
+          example: production
+        coordinator:
+          type: boolean
+          description: True if this node is the coordinator
+        starting:
+          type: boolean
+          description: True if the cluster is still initializing
+        uptime:
+          type: string
+          description: Human-readable uptime duration
 externalDocs:
   description: Trino Client REST API Documentation
   url: https://trino.io/docs/current/develop/client-protocol.html
