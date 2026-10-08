@@ -69,6 +69,12 @@ accessModel:
   method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/trino.png
 common:
+  - type: Plans
+    url: plans/trino-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/trino-rate-limits.yml
+  - type: FinOps
+    url: finops/trino-finops.yml
   - type: CapabilityMap
     url: capabilities/trino-capability-edges.yml
     name: Trino Business Capability Map
