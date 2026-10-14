@@ -15,3 +15,16 @@
   relationship: connector-coverage
   status: not-a-workflow
   arazzo: null
+- slug: trino-grafana-own
+  label: Grafana (own)
+  partner: grafana-com
+  partner_name: Grafana (own)
+  category: Data Source
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://grafana.com/grafana/plugins/trino-datasource/
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null
