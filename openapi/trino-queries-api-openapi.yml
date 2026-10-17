@@ -361,59 +361,6 @@ components:
           format: double
           minimum: 0
           maximum: 100
-    Warning:
-      type: object
-      description: Non-fatal warning from query execution
-      properties:
-        warningCode:
-          type: object
-          properties:
-            code:
-              type: integer
-            name:
-              type: string
-        message:
-          type: string
-    StageStats:
-      type: object
-      description: Statistics for a single query stage
-      properties:
-        stageId:
-          type: string
-        state:
-          type: string
-        done:
-          type: boolean
-        nodes:
-          type: integer
-        totalSplits:
-          type: integer
-          format: int64
-        queuedSplits:
-          type: integer
-          format: int64
-        runningSplits:
-          type: integer
-          format: int64
-        completedSplits:
-          type: integer
-          format: int64
-        cpuTimeMillis:
-          type: integer
-          format: int64
-        wallTimeMillis:
-          type: integer
-          format: int64
-        processedRows:
-          type: integer
-          format: int64
-        processedBytes:
-          type: integer
-          format: int64
-        subStages:
-          type: array
-          items:
-            $ref: '#/components/schemas/StageStats'
     ErrorLocation:
       type: object
       description: Source location of a query error
@@ -500,6 +447,46 @@ components:
           description: Non-fatal warnings from query execution
           items:
             $ref: '#/components/schemas/Warning'
+    StageStats:
+      type: object
+      description: Statistics for a single query stage
+      properties:
+        stageId:
+          type: string
+        state:
+          type: string
+        done:
+          type: boolean
+        nodes:
+          type: integer
+        totalSplits:
+          type: integer
+          format: int64
+        queuedSplits:
+          type: integer
+          format: int64
+        runningSplits:
+          type: integer
+          format: int64
+        completedSplits:
+          type: integer
+          format: int64
+        cpuTimeMillis:
+          type: integer
+          format: int64
+        wallTimeMillis:
+          type: integer
+          format: int64
+        processedRows:
+          type: integer
+          format: int64
+        processedBytes:
+          type: integer
+          format: int64
+        subStages:
+          type: array
+          items:
+            $ref: '#/components/schemas/StageStats'
     QuerySummary:
       type: object
       description: Summary of a query for list views
@@ -555,6 +542,19 @@ components:
             arguments:
               type: array
               items: {}
+    Warning:
+      type: object
+      description: Non-fatal warning from query execution
+      properties:
+        warningCode:
+          type: object
+          properties:
+            code:
+              type: integer
+            name:
+              type: string
+        message:
+          type: string
 externalDocs:
   description: Trino Client REST API Documentation
   url: https://trino.io/docs/current/develop/client-protocol.html
