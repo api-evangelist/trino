@@ -102,6 +102,40 @@ edges:
     detected: '2026-10-19'
   detected_by: sweep-cloud-native.py
   first_seen: '2026-10-15'
+- partner_name: Arch User Repository (AUR)
+  partner: null
+  partner_match: null
+  type: register
+  direction: provider-built
+  category: official CLI (Arch User Repository (AUR))
+  evidence: https://aur.archlinux.org/packages/trino-cli-bin
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: Arch User Repository (AUR) (public package index)
+    spec_file: null
+    packages:
+    - name: trino-cli-bin
+      kind: aur
+      version: 483-1
+      released: '2026-08-16'
+      released_field: AUR LastModified
+      out_of_date: false
+      lapsed: false
+      page: https://aur.archlinux.org/packages/trino-cli-bin
+      upstream: https://trino.io/
+      cli: 'AUR description: Distributed SQL Query Engine for Big Data - Client'
+      repo_leg: domain:trino.io
+      publisher_leg: artifact-github-org:trinodb
+      matched_by: domain
+    current: true
+    signal_note: 'the provider''s own command-line tool packaged for Arch Linux (community-maintained PKGBUILD whose
+      upstream and source artifact are the provider''s): distribution, not an integration; lapsed = flagged out-of-date
+      or not updated in 24 months'
+    detected_by: sweep-aur-vendor-cli-packages.py
+    detected: '2026-10-23'
+  detected_by: sweep-aur-vendor-cli-packages.py
+  first_seen: '2026-10-23'
 method: searched
 checked:
 - grafana-com/integrations/grafana-com-integration-edges.yml
@@ -112,4 +146,7 @@ checked:
 - https://github.com/lfai/landscape
 - https://github.com/mlcommons
 - https://hightouch.com/docs/sources/trino
+- https://aur.archlinux.org/cgit/aur.git/tree/.SRCINFO
+- https://aur.archlinux.org/packages-meta-ext-v1.json.gz
+- https://aur.archlinux.org/rpc/v5/info
 source: https://hightouch.com/docs/sources/trino
